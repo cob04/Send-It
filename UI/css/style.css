@@ -75,13 +75,30 @@ body {
 	color: #FFF;
 	font-size: 18px;
 	font-weight: 600;
-	padding:20px 30px;
+	padding:15px 30px;
 	border: none;
 	border-radius: 3px;
 }
 #intro .btn-action a {
 	text-decoration: none;
 	color: #FFF;
+}
+#intro .order-form {
+	background-color: #FFF;
+	padding: 20px;
+	border: none;
+	border-radius: 3px;
+	opacity: 0.8;
+}
+
+#intro .order-form input[type="text"] {
+	padding: 10px;
+	margin-right: 10px;
+}
+#intro .order-form label {
+	font-size: 20px;
+	color: #555;
+	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
 }
 /** marketting **/
 #marketing .item {
