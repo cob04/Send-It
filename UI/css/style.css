@@ -1,0 +1,171 @@
+body {
+	background-color: #F4F4F4;
+	font-size: 16px;
+	font-family: Helvetica, Helvetica Nue, sans-serif;
+	margin: 0;
+	line-height: 1.6em;
+	color: #555;
+}
+.container {
+	width: 80%;
+	margin: auto;
+	overflow: hidden;
+}
+/** navbar **/
+#main-nav {
+	background-color: #33CC99;
+	color: #FFF;
+}
+#main-nav ul {
+	padding: 10px 0;
+	list-style: none;
+}
+#main-nav li {
+	display: inline;
+}
+#main-nav a {
+	text-decoration: none;
+	color: #F8F8F8;
+	font-size: 20px;
+	padding-right: 20px;
+}
+#main-nav a:hover,
+#main-nav a:active {
+	color: #E2E2E2;
+}
+#main-nav .logo a {
+	font-size: 30px;
+	padding-right: 50px;
+	font-weight: 700;
+	text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
+#main-nav .right {
+	float: right;
+}
+
+/** intro section **/
+#intro {
+	background-image: url('../images/intro-bg.jpg');
+	background-position: center center;
+	background-size: cover;
+	margin-bottom: 30px;
+	text-align: center;
+	color: #FFF;
+}
+#intro .overlay {
+	background: rgba(0, 0, 0, 0.60);
+	min-height: 300px;
+}
+#intro .content {
+	padding: 100px 60px;
+}
+#intro .content h1 {
+	font-size: 3em;
+	font-weight: 300;
+	line-height: 1.1em;
+	text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
+#intro .content h3 {
+	font-size: 1.5em;
+	line-height: 1.5em;
+	font-weight: 300;
+}
+#intro .btn-action {
+	background-color: #FF530A;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 600;
+	padding:15px 30px;
+	border: none;
+	border-radius: 3px;
+}
+#intro .btn-action a {
+	text-decoration: none;
+	color: #FFF;
+}
+#intro .order-form {
+	background-color: #FFF;
+	padding: 20px;
+	border: none;
+	border-radius: 3px;
+	opacity: 0.8;
+}
+
+#intro .order-form input[type="text"] {
+	padding: 10px;
+	margin-right: 10px;
+}
+#intro .order-form label {
+	font-size: 20px;
+	color: #555;
+	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
+}
+#intro .order-form .form-group {
+	display: inline;
+}
+/** marketting **/
+#marketing .item {
+	padding: 10px;
+	float: left;
+	width: 33.3%;
+	box-sizing: border-box;
+	text-align: center;
+}
+#marketing .item h3 {
+	font-size: 1.8em;
+	text-align: center;
+	font-weight: 600;
+	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
+}
+/** footer **/
+#footer {
+	background-color: #66CC99;
+	padding: 50px 20px 20px 20px;
+	text-align: center;
+	color: #FFF;
+}
+
+/** mobile **/
+@media(max-width:600px){
+	.container {
+		width: 100%;
+	}
+	#main-nav li {
+		line-height: 1.8em;
+		text-align: center;
+		float: none;
+		display: block;
+	}
+	#main-nav .logo a {
+		padding-right: 0;
+	}
+	#main-nav .right {
+		float: none;
+	}
+	#intro .overlay {
+		background: rgba(0, 0, 0, 0.70);
+	}
+	#intro .content {
+		padding: 20px 10px 40px 10px;
+	}
+	#intro .content h1 {
+		font-size: 2.2em;
+	}
+	#intro .content h3 {
+		font-size: 1em;
+	}
+	#intro .order-form {
+		width: 80%;
+		margin: auto;
+		opacity: 0.7;
+	}
+	#intro .order-form .form-group{
+		display: block;
+		padding-bottom: 10px;
+		margin: auto;
+	}
+	#marketing .item {
+		float: none;
+		width: 100%;
+	}
+}
