@@ -267,4 +267,8 @@ hr {
 	.main {
 		padding-top: 20px;
 	}
+	.make-order-form .location {
+		float: none;
+		width: 100%;
+	}
 }
