@@ -1,20 +1,44 @@
 body {
 	background-color: #F4F4F4;
 	font-size: 16px;
-	font-family: Helvetica, Helvetica Nue, sans-serif;
+	font-family: Helvetica, Helvetica Neue, sans-serif;
 	margin: 0;
 	line-height: 1.6em;
 	color: #555;
+}
+hr {
+	border-top: #555;
 }
 .container {
 	width: 80%;
 	margin: auto;
 	overflow: hidden;
 }
+.text-center {
+	text-align: center;
+}
+/** buttons **/
+.btn-action {
+	background-color: #FF530A;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 600;
+	padding:15px 30px;
+	border: none;
+	border-radius: 3px;
+}
+.btn-action a {
+	text-decoration: none;
+	color: #FFF;
+}
+.btn-block {
+	width: 100%;
+}
 /** navbar **/
 #main-nav {
 	background-color: #33CC99;
 	color: #FFF;
+	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
 }
 #main-nav ul {
 	padding: 10px 0;
@@ -115,6 +139,39 @@ body {
 	font-size: 1.8em;
 	text-align: center;
 	font-weight: 600;
+	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
+}
+/** main **/
+.main {
+	padding: 50px 0;
+	background-color: #F4F4F4;
+	border-bottom: 1px solid #E7E7E7;
+}
+/** account-form **/
+.account-form {
+	background: #FFF;
+	padding: 20px;
+	border: 1px solid #E7E7E7;
+	border-radius: 5px;
+	width: 40%;
+	margin: auto;
+	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
+}
+.account-form .form-group {
+	padding-bottom: 10px;
+}
+.account-form label {
+	display: block;
+}
+.account-form input[type="text"],
+.account-form input[type="email"],
+.account-form input[type="password"] {
+	padding: 8px;
+	width: 100%;
+	box-sizing: border-box;
+}
+.account-form h2 {
+	text-align: center;
 	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
 }
 /** footer **/
