@@ -11,6 +11,7 @@ body {
 	margin: auto;
 	overflow: hidden;
 }
+/** navbar **/
 #main-nav {
 	background-color: #33CC99;
 	color: #FFF;
@@ -40,6 +41,48 @@ body {
 #main-nav .right {
 	float: right;
 }
+
+/** intro section **/
+#intro {
+	background-image: url('../images/intro-bg.jpg');
+	background-position: center center;
+	background-size: cover;
+	margin-bottom: 30px;
+	text-align: center;
+	color: #FFF;
+}
+#intro .overlay {
+	background: rgba(0, 0, 0, 0.60);
+	min-height: 300px;
+}
+#intro .content {
+	padding: 100px 60px;
+}
+#intro .content h1 {
+	font-size: 3em;
+	font-weight: 300;
+	line-height: 1.1em;
+	text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+}
+#intro .content h3 {
+	font-size: 1.5em;
+	line-height: 1.5em;
+	font-weight: 300;
+}
+#intro .btn-action {
+	background-color: #FF530A;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 600;
+	padding:20px 30px;
+	border: none;
+	border-radius: 3px;
+}
+#intro .btn-action a {
+	text-decoration: none;
+	color: #FFF;
+}
+
 #footer {
 	text-align: center;
 }
