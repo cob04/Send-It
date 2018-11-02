@@ -18,6 +18,7 @@ hr {
 	text-align: center;
 }
 /** buttons **/
+
 .btn-action {
 	background-color: #FF530A;
 	color: #FFF;
@@ -31,8 +32,43 @@ hr {
 	text-decoration: none;
 	color: #FFF;
 }
+.btn-green {
+	background-color: #66CC99;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 600;
+	padding:15px 30px;
+	border: none;
+	border-radius: 3px;
+}
+.btn-green a {
+	text-decoration: none;
+	color: #FFF;
+}
+.btn-green:hover,
+.btn-green:active {
+	background-color: #33CC99;
+}
+
+.btn-blue {
+	background-color: #24C0D9;
+	color: #FFF;
+	font-size: 18px;
+	font-weight: 600;
+	padding:15px 30px;
+	border: none;
+	border-radius: 3px;
+}
+.btn-blue a {
+	text-decoration: none;
+	color: #FFF;
+}
 .btn-block {
 	width: 100%;
+}
+.btn-sm {
+	padding: 5px 10px;
+	font-size: 14px;
 }
 /** navbar **/
 #main-nav {
@@ -143,8 +179,13 @@ hr {
 }
 /** main **/
 .main {
-	padding: 50px 0;
+	padding: 20px 0 50px 0;
 	background-color: #F4F4F4;
+	border-bottom: 1px solid #E7E7E7;
+}
+.main-alt {
+	padding: 20px 0 50px 0;
+	background-color: #FFF;
 	border-bottom: 1px solid #E7E7E7;
 }
 /** account-form **/
@@ -208,6 +249,18 @@ hr {
 	float: left;
 	width: 50%;
 	box-sizing: border-box;
+}
+/** Thumbnails **/
+.thumbnail {
+	width: 25%;
+	padding: 15px;
+	min-height: 150px;
+	float: left;
+	box-sizing: border-box;
+	background-color: #efefef;
+	border: 1px solid #e7e7e7;
+	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
+	margin: 10px;
 }
 /** footer **/
 #footer {
