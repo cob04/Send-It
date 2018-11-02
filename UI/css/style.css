@@ -82,7 +82,23 @@ body {
 	text-decoration: none;
 	color: #FFF;
 }
-
-#footer {
+/** marketting **/
+#marketing .item {
+	padding: 10px;
+	float: left;
+	width: 33.3%;
+	box-sizing: border-box;
 	text-align: center;
+}
+#marketing .item h3 {
+	font-size: 1.8em;
+	text-align: center;
+	font-weight: 600;
+	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
+}
+#footer {
+	background-color: #66CC99;
+	padding: 50px 20px 20px 20px;
+	text-align: center;
+	color: #FFF;
 }
