@@ -96,9 +96,45 @@ body {
 	font-weight: 600;
 	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
 }
+/** footer **/
 #footer {
 	background-color: #66CC99;
 	padding: 50px 20px 20px 20px;
 	text-align: center;
 	color: #FFF;
+}
+
+/** mobile **/
+@media(max-width:600px){
+	.container {
+		width: 100%;
+	}
+	#main-nav li {
+		line-height: 1.8em;
+		text-align: center;
+		float: none;
+		display: block;
+	}
+	#main-nav .logo a {
+		padding-right: 0;
+	}
+	#main-nav .right {
+		float: none;
+	}
+	#intro .overlay {
+		background: rgba(0, 0, 0, 0.80);
+	}
+	#intro .content {
+		padding: 20px 0 40px 0;
+	}
+	#intro .content h1 {
+		font-size: 2.2em;
+	}
+	#intro .content h3 {
+		font-size: 1em;
+	}
+	#marketing .item {
+		float: none;
+		width: 100%;
+	}
 }
