@@ -156,6 +156,7 @@ hr {
 	width: 40%;
 	margin: auto;
 	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
+	box-sizing: border-box;
 }
 .account-form .form-group {
 	padding-bottom: 10px;
@@ -224,5 +225,12 @@ hr {
 	#marketing .item {
 		float: none;
 		width: 100%;
+	}
+	.account-form {
+		width: 90%;
+		margin: auto;
+	}
+	.main {
+		padding-top: 20px;
 	}
 }
