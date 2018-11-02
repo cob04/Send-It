@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create order | Send-It</title>
+	<link rel="stylesheet" type="text/css" href="fontawesome/css/all.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	<header id="main-nav">
+		<div class="container">
+			<ul>
+				<li class="logo"><a href="index.html">Send-It</a></li>
+				<li class="right"><a href="signup.html"><i class="fas fa-user-plus"></i> Sign-up</a></li>
+				<li class="right"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Sign-In</a></li>
+			</ul>
+		</div>
+	</header>
+	<section class="main">
+		<div class="container">
+			<h2 class="text-center">Create a new order</h2>
+			<form class="make-order-form">
+				<div>
+					<div class="location">
+						<h3>Pick up location</h3>
+						<div class="form-group">
+							<label>City</label>
+							<input type="text" list="locations" name="first-name" placeholder="from" value="Nairobi">
+							<label>Address</label>
+							<input type="text" name="from-address" placeholder="address">
+						</div>
+					</div>
+					<div class="location">
+						<h3>Drop off location</h3>
+						<div class="form-group">
+							<label>City</label>
+							<input type="text" list="locations" name="last-name" placeholder="to" value="Kisumu">
+							<label>Address</label>
+							<input type="text" name="to-address" placeholder="address">	
+						</div>
+						<datalist id="locations">
+							<option value="Nairobi"></option>
+							<option value="Kisumu"></option>
+							<option value="Eldoret"></option>
+							<option value="Mombasa"></option>
+							<option value="Nyeri"></option>
+						</datalist>
+					</div>
+				</div>
+				<div>
+					<h3>Recipient Detailss</h3>
+					<div class="form-group">
+						<label>First name</label>
+						<input type="text" name="firstname" placeholder="first name">
+					</div>
+					<div class="form-group">
+						<label>Last name</label>
+						<input type="text" name="lastname" placeholder="last name">
+					</div>
+				</div>
+				<div>
+					<label>Email</label>
+					<input type="email" name="email" placeholder="email address">
+					<label>Phone Number</label>
+					<input type="phone" name="phone" placeholder="phone number">
+				</div>
+				<button type="submit" class="btn-action">Finish</button>
+
+			</form>
+		</div>
+	</section>
+</body>
+</html>

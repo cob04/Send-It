@@ -175,6 +175,40 @@ hr {
 	text-align: center;
 	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
 }
+/** make-order-form **/
+.make-order-form {
+	background: #FFF;
+	padding: 20px;
+	border: 1px solid #E7E7E7;
+	border-radius: 5px;
+	width: 80%;
+	margin: auto;
+	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
+	box-sizing: border-box;
+}
+.make-order-form input[type="text"],
+.make-order-form input[type="email"],
+.make-order-form input[type="phone"]{
+	padding: 8px;
+	width: 100%;
+	box-sizing: border-box;
+}
+.make-order-form .form-group {
+	display: inline;
+	width: 50%;
+}
+.make-order-form h3 {
+	color: #339966;
+}
+.make-order-form button {
+	margin-top: 20px;
+}
+.make-order-form .location{
+	padding: 10px;
+	float: left;
+	width: 50%;
+	box-sizing: border-box;
+}
 /** footer **/
 #footer {
 	background-color: #66CC99;
