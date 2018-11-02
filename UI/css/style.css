@@ -100,6 +100,9 @@ body {
 	color: #555;
 	text-shadow: 0 1px  1px rgba(0, 0, 0, 0.3);
 }
+#intro .order-form .form-group {
+	display: inline;
+}
 /** marketting **/
 #marketing .item {
 	padding: 10px;
@@ -140,16 +143,26 @@ body {
 		float: none;
 	}
 	#intro .overlay {
-		background: rgba(0, 0, 0, 0.80);
+		background: rgba(0, 0, 0, 0.70);
 	}
 	#intro .content {
-		padding: 20px 0 40px 0;
+		padding: 20px 10px 40px 10px;
 	}
 	#intro .content h1 {
 		font-size: 2.2em;
 	}
 	#intro .content h3 {
 		font-size: 1em;
+	}
+	#intro .order-form {
+		width: 80%;
+		margin: auto;
+		opacity: 0.7;
+	}
+	#intro .order-form .form-group{
+		display: block;
+		padding-bottom: 10px;
+		margin: auto;
 	}
 	#marketing .item {
 		float: none;
