@@ -5,8 +5,6 @@ from flask_restful import Resource
 
 from .models import ParcelOrderStore
 
-parcel_orders = []
-
 
 class ParcelOrderList(Resource):
 
@@ -14,8 +12,12 @@ class ParcelOrderList(Resource):
         self.store = ParcelOrderStore()
 
     def get(self):
-        parcels = self.store.all()
-        return make_response(jsonify(parcels), 200)
+        parcel_orders = self.store.all()
+        payload = {
+            "message": "success",
+            "parcel_orders": parcel_orders
+        }
+        return make_response(jsonify(payload), 200)
 
     def post(self):
         request_data = request.get_json()
