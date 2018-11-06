@@ -18,7 +18,6 @@ class ParcelOrderStore:
             "weight": weight
         }
         self.db.append(payload)
-        print(self.db)
         return payload
 
     def all(self):
