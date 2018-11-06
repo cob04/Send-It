@@ -1,6 +1,9 @@
 # models.py
+from .exceptions import OrderNotFoundError
+
 
 parcel_orders = []
+
 
 class ParcelOrderStore:
     """Object to store parcel orders."""
@@ -29,4 +32,4 @@ class ParcelOrderStore:
         try:
             return self.db[order_id - 1]
         except IndexError:
-            return None
+            raise OrderNotFoundError
