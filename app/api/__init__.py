@@ -12,3 +12,5 @@ api = Api(api_blueprint)
 
 api.add_resource(views.ParcelOrderList, '/parcels/',
                  strict_slashes=False)
+api.add_resource(views.ParcelOrder, '/parcels/<int:order_id>',
+                 strict_slashes=False)

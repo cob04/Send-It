@@ -31,3 +31,20 @@ class ParcelOrderList(Resource):
                                   destination, weight)
 
         return make_response(jsonify(payload), 201)
+
+
+class ParcelOrder(Resource):
+
+    def __init__(self):
+        self.store = ParcelOrderStore()
+
+    def get(self, order_id):
+        parcel_order = self.store.fetch_by_id(order_id)
+        if not parcel_order:
+            payload = {"message": "failed",
+                       "error": "Not found"}
+            return make_response(jsonify(payload), 404)
+        payload = {"message": "success",
+                   "parcel_order": parcel_order
+                  }
+        return make_response(jsonify(payload), 200)
