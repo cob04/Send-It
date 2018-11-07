@@ -1,13 +1,12 @@
 # app/__init__.py
 
-from flask import Flask
+from  flask import Flask
+from .api.version1 import v1
 
 
-def create_app(config_file):
+def create_app(config_name):
     app = Flask(__name__)
-    app.config.from_object(config_file)
+    app.config.from_object(config_name)
+    app.register_blueprint(v1)
 
-    from .api import api_blueprint
-    app.register_blueprint(api_blueprint, url_prefix='/api/v1',
-                           strict_slashes=False)
     return app
