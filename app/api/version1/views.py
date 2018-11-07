@@ -5,6 +5,8 @@ from flask_restful import Resource
 
 from .models import ParcelOrderStore
 
+from .exceptions import OrderNotFoundError
+
 
 class ParcelOrderList(Resource):
 
@@ -31,3 +33,20 @@ class ParcelOrderList(Resource):
                                   destination, weight)
 
         return make_response(jsonify(payload), 201)
+
+
+class ParcelOrder(Resource):
+
+    def __init__(self):
+        self.store = ParcelOrderStore()
+
+    def get(self, order_id):
+        try:
+            parcel_order = self.store.fetch_by_id(order_id)
+            payload = {"message": "success",
+                       "parcel_order": parcel_order
+                  }
+            return make_response(jsonify(payload), 200)
+        except OrderNotFoundError:
+            payload = {"message": "failed","error": "Not found"}
+            return make_response(jsonify(payload), 404)
