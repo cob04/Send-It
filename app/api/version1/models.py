@@ -29,7 +29,4 @@ class ParcelOrderStore:
 
     def fetch_by_id(self, order_id):
         """Return a specific order by id."""
-        try:
-            return self.db[order_id - 1]
-        except IndexError:
-            return None
+        return self.db[order_id - 1]
