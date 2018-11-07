@@ -45,5 +45,9 @@ class ParcelOrderStoreTests(unittest.TestCase):
     def test_fetching_by_id_from_an_empty_store(self):
         store = ParcelOrderStore()
         store.db = []
-        with self.assertRaises(OrderNotFoundError) as e:
+        with self.assertRaises(IndexError):
             store.fetch_by_id(1)
+
+
+if __name__ == "__main__":
+    unittest.main()
