@@ -1,6 +1,7 @@
 import unittest
 
 from ..models import ParcelOrderStore
+from ..exceptions import OrderNotFoundError
 
 
 class ParcelOrderStoreTests(unittest.TestCase):
@@ -41,4 +42,5 @@ class ParcelOrderStoreTests(unittest.TestCase):
     def test_fetching_by_id_from_an_empty_store(self):
         store = ParcelOrderStore()
         store.db = []
-        self.assertIsNone(store.fetch_by_id(1))
+        with self.assertRaises(OrderNotFoundError) as e:
+            store.fetch_by_id(1)
