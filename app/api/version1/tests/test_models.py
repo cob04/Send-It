@@ -9,6 +9,9 @@ class ParcelOrderStoreTests(unittest.TestCase):
     def setUp(self):
         self.store = ParcelOrderStore()
 
+    def tearDown(self):
+        self.store.db = []
+
     def test_adding_order_to_store(self):
         payload = self.store.save('bob', 'linda', 'home', 'restaurant', '1kg')
         self.assertEqual(payload, {'id': 1,
