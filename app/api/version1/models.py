@@ -2,10 +2,13 @@
 from .exceptions import OrderNotFoundError
 
 
+parcel_orders = []
+
+
 class ParcelOrderStore:
     """Object to store parcel orders."""
     def __init__(self):
-        self.db = []
+        self.db = parcel_orders
 
     def save(self, sender, recipient, pickup, destination, weight):
         """Save a new order to the store."""
@@ -29,4 +32,4 @@ class ParcelOrderStore:
         try:
             return self.db[order_id - 1]
         except IndexError:
-            raise OrderNotFoundError
+            return None
