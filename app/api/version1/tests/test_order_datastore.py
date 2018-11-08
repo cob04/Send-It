@@ -35,3 +35,19 @@ class ParcelOrderStoreTests(unittest.TestCase):
                            'destination': 'restaurant',
                            'weight': '1kg',
                            'status': NOT_DELIVERED}])
+
+    def test_fetching_order_by_id(self):
+        self.store.save('bob', 'linda', 'home', 'restaurant', '1kg')
+        self.assertEqual(self.store.fetch_by_id(1),
+                         {'id': 1,
+                          'sender': 'bob',
+                          'recipient': 'linda',
+                          'pickup': 'home',
+                          'destination': 'restaurant',
+                          'weight': '1kg',
+                          'status': NOT_DELIVERED})
+
+    def test_fetching_non_existant_order_by_id(self):
+        store = ParcelOrderStore()
+        with self.assertRaises(IndexError):
+            store.fetch_by_id(1)
