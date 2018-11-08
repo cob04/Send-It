@@ -24,3 +24,14 @@ class ParcelOrderStoreTests(unittest.TestCase):
                                    'weight': '1kg',
                                    'status': NOT_DELIVERED})
         self.assertEqual(self.store.db, [payload])
+
+    def test_fetching_orders_in_the_store(self):
+        self.store.save('bob', 'linda', 'home', 'restaurant', '1kg')
+        self.assertEqual(self.store.all(),
+                         [{'id': 1,
+                           'sender': 'bob',
+                           'recipient': 'linda',
+                           'pickup': 'home',
+                           'destination': 'restaurant',
+                           'weight': '1kg',
+                           'status': NOT_DELIVERED}])
