@@ -35,3 +35,9 @@ class ParcelOrderStore:
     def fetch_by_id(self, order_id):
         """Return the order specified by id."""
         return self.db[order_id - 1]
+
+    def cancel_by_id(self, order_id):
+        """Mark an order as cancelled."""
+        order = self.fetch_by_id(order_id)
+        order["status"] = CANCELLED
+        return order

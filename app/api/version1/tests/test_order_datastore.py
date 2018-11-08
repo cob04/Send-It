@@ -3,7 +3,7 @@
 import unittest
 
 from ..models import ParcelOrderStore
-from ..models import NOT_DELIVERED
+from ..models import CANCELLED, NOT_DELIVERED
 
 
 class ParcelOrderStoreTests(unittest.TestCase):
@@ -51,3 +51,14 @@ class ParcelOrderStoreTests(unittest.TestCase):
         store = ParcelOrderStore()
         with self.assertRaises(IndexError):
             store.fetch_by_id(1)
+
+    def test_marking_order_as_cancelled(self):
+        self.store.save('bob', 'linda', 'home', 'restaurant', '1kg')
+        self.assertEqual(self.store.cancel_by_id(1),
+                         {'id': 1,
+                          'sender': 'bob',
+                          'recipient': 'linda',
+                          'pickup': 'home',
+                          'destination': 'restaurant',
+                          'weight': '1kg',
+                          'status': CANCELLED})
