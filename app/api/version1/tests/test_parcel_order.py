@@ -4,7 +4,7 @@ import json
 from app import create_app
 
 
-class TestParcelOrderList(unittest.TestCase):
+class TestParcelOrder(unittest.TestCase):
 
     def setUp(self):
         create_app().testing = True
@@ -16,7 +16,7 @@ class TestParcelOrderList(unittest.TestCase):
             "destination": "restaurant",
             "weight": "2kg"}
 
-    def test_post(self):
+    def test_post_new_order(self):
         response = self.app.post('/api/v1/parcels',
                                   data=json.dumps(self.data),
                                   content_type="application/json")
@@ -25,14 +25,17 @@ class TestParcelOrderList(unittest.TestCase):
             "message":"success",
             "parcel_order":{
                 "sender": "bob",
-                "id": 1,
+                "id": 2,
                 "recipient": "linda",
                 "pickup": "home",
                 "destination": "restaurant",
                 "weight": "2kg"}}
         self.assertEqual(response.get_json(), expected_json)
 
-    def test_get(self):
+    def test_get_all_orders(self):
+        self.app.post('/api/v1/parcels',
+                      data=json.dumps(self.data),
+                      content_type="application/json")
         response = self.app.get('/api/v1/parcels')
         self.assertEqual(response.status_code, 200)
         expected_json = {
@@ -45,29 +48,16 @@ class TestParcelOrderList(unittest.TestCase):
                 "destination": "restaurant",
                 "weight": "2kg"}]}
         self.assertEqual(response.get_json(), expected_json)
-
-
-class TestParcelOrder(unittest.TestCase):
-
-    def setUp(self):
-        create_app().testing = True
-        self.app = create_app().test_client()
-        self.data = {
-            "sender": "louis",
-            "recipient": "gin",
-            "pickup": "home",
-            "destination": "restaurant",
-            "weight": "2kg"}
-
+     
     def test_get_by_id_when_order_exists(self):
         response = self.app.get('/api/v1/parcels/1')
         self.assertEqual(response.status_code, 200)
         expected_json = {
             "message": "success",
             "parcel_order": {
-                "sender": "louis",
+                "sender": "bob",
                 "id": 1,
-                "recipient": "gin",
+                "recipient": "linda",
                 "pickup": "home",
                 "destination": "restaurant",
                 "weight": "2kg"}}

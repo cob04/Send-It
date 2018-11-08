@@ -21,7 +21,7 @@ class ParcelOrderStore:
             "weight": weight
         }
         self.db.append(payload)
-        return payload
+        return self.db[payload["id"] - 1]
 
     def all(self):
         """Return all the orders in the store."""

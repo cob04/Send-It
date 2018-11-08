@@ -8,7 +8,7 @@ from .models import ParcelOrderStore
 from .exceptions import OrderNotFoundError
 
 
-class ParcelOrderList(Resource):
+class ParcelOrderList(Resource, ParcelOrderStore):
 
     def __init__(self):
         self.store = ParcelOrderStore()
@@ -17,7 +17,7 @@ class ParcelOrderList(Resource):
         parcel_orders = self.store.all()
         payload = {
             "message": "success",
-            "parcel_orders": parcel_orders
+            "parcel_order": parcel_orders
         }
         return make_response(jsonify(payload), 200)
 
@@ -29,13 +29,15 @@ class ParcelOrderList(Resource):
         destination = request_data['destination']
         weight = request_data['weight']
 
-        payload = self.store.save(sender, recipient, pickup,
+        parcel_order = self.store.save(sender, recipient, pickup,
                                   destination, weight)
 
+        payload = {"message": "success",
+                   "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
 
 
-class ParcelOrder(Resource):
+class ParcelOrder(Resource, ParcelOrderStore):
 
     def __init__(self):
         self.store = ParcelOrderStore()
@@ -47,6 +49,6 @@ class ParcelOrder(Resource):
                        "parcel_order": parcel_order
                   }
             return make_response(jsonify(payload), 200)
-        except OrderNotFoundError:
-            payload = {"message": "failed","error": "Not found"}
+        except IndexError:
+            payload = {"message": "failed","error": "Not Found"}
             return make_response(jsonify(payload), 404)
