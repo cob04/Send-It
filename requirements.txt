@@ -1,0 +1,3 @@
+# base dependecies
+
+Flask==1.0.2
