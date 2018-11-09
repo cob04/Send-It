@@ -24,3 +24,11 @@ class ParcelOrderList(Resource, ParcelOrderStore):
         payload = {"message": "success",
                    "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
+
+    def get(self):
+        orders = self.store.all()
+        payload = {
+            "message": "success",
+            "parcel_orders": orders
+        }
+        return make_response(jsonify(payload), 200)
