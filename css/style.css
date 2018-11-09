@@ -262,6 +262,19 @@ hr {
 	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
 	margin: 10px;
 }
+.tab {
+	width: 100%;
+	padding: 15px;
+	min-height: 60px;
+	box-sizing: border-box;
+	background-color: #efefef
+	border: 1px solid #e7e7e7;
+	box-shadow: 0 0 7px rgba(0, 0, 0, .1);
+	margin-bottom: 10px;
+}
+.options {
+	box-sizing: border-box;
+}
 /** footer **/
 #footer {
 	background-color: #66CC99;
@@ -323,5 +336,8 @@ hr {
 	.make-order-form .location {
 		float: none;
 		width: 100%;
+	}
+	.options {
+		float: none;
 	}
 }
