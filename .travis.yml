@@ -10,19 +10,14 @@ python:
 # install other non app specific dependencies
 install:
   - pip install -r requirements.txt
-  - pip install coverage
+  - pip install coveralls
 
 
 # run the tests using nosetest with a coverage report
-script: true
-  - nosetests --with-coverage --coverage report
+scripts:
+  - nosetests --with-coverage --cover-package=app
 
 
 # Let coveralls know the test coverage after the tests are done.
-after_script:
+script:
   - coveralls
-
-
-# use codecov to get test coverage
-after_success:
-  - codecov
