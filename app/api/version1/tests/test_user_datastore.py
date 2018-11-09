@@ -18,3 +18,9 @@ class UserDataStoreTests(unittest.TestCase):
         self.assertEqual(payload, {'id': 1,
                                    'name': 'bob',
                                    'email': 'bob@email.com'})
+
+    def test_authenticating_a_user(self):
+        self.store.save('bob', 'bob@gmail.com', 'burgers')
+        self.assertTrue(self.store.authenticate("bob@gmail.com", "burgers"))
+        self.assertFalse(self.store.authenticate("bob@gmail.com", "banana"))
+        self.assertFalse(self.store.authenticate("bob", "burgers"))
