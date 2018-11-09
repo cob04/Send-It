@@ -41,3 +41,16 @@ class ParcelOrderStore:
         order = self.fetch_by_id(order_id)
         order["status"] = CANCELLED
         return order
+
+    def update_by_id(self, order_id, sender, recipient, pickup, destination,
+                     weight, status):
+        """Save a new order to the store."""
+        order = self.fetch_by_id(order_id)
+        order["sender"] = sender
+        order["recipient"] = recipient
+        order["pickup"] = pickup
+        order["destination"] = destination
+        order["weight"] = weight
+        order["status"] = status
+        self.db[order["id"] - 1] = order
+        return self.db[order["id"] - 1]
