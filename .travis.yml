@@ -1,0 +1,28 @@
+# set language
+language: python
+
+# python version
+python:
+  - "3.6"
+
+
+# install app dependencies
+# install other non app specific dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install coverage
+
+
+# run the tests using nosetest with a coverage report
+script: true
+  - nosetests --with-coverage --coverage report
+
+
+# Let coveralls know the test coverage after the tests are done.
+after_script:
+  - coveralls
+
+
+# use codecov to get test coverage
+after_success:
+  - codecov
