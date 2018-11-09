@@ -67,3 +67,11 @@ class UserDataStore:
             "email": user["email"],
         }
         return payload
+
+    def authenticate(self, email, password):
+        """Authenticate users in the store."""
+        for user in self.db:
+            if user["email"] == email and user["password"] == password:
+                return True
+        else:
+            return False
