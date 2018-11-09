@@ -54,3 +54,36 @@ class ParcelOrderStore:
         order["status"] = status
         self.db[order["id"] - 1] = order
         return self.db[order["id"] - 1]
+
+user_data = []
+
+
+class UserDataStore:
+    """Object to store user data."""
+    def __init__(self):
+        self.db = user_data
+
+    def save(self, name, email, password):
+        """Save a new user to the store."""
+        new_user = {
+            "id": len(self.db) + 1,
+            "name": name,
+            "email": email,
+            "password": password
+        }
+        self.db.append(new_user)
+        user = self.db[new_user["id"] - 1]
+        payload = {
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+        }
+        return payload
+
+    def authenticate(self, email, password):
+        """Authenticate users in the store."""
+        for user in self.db:
+            if user["email"] == email and user["password"] == password:
+                return True
+        else:
+            return False
