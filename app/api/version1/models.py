@@ -55,6 +55,7 @@ class ParcelOrderStore:
         self.db[order["id"] - 1] = order
         return self.db[order["id"] - 1]
 
+
 user_data = []
 
 
@@ -90,7 +91,7 @@ class UserDataStore:
 
     def fetch_by_id(self, user_id):
         """Return the user specified by id."""
-        user = self.db[user_id -1]
+        user = self.db[user_id - 1]
         payload = {
             "id": user["id"],
             "name": user["name"],
