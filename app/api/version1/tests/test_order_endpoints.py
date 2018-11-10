@@ -101,7 +101,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
             "weight": "2kg",
             "status": CANCELLED}
 
-        put_response = self.app.put('/api/v1/parcels/1',
+        put_response = self.app.put('/api/v1/parcels/1/cancel',
                                     data=json.dumps(data),
                                     content_type="application/json")
         data["id"] = 1
