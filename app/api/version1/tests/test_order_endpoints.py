@@ -15,6 +15,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         create_app().testing = True
         self.app = create_app().test_client()
         self.data = {
+            "user_id": 1,
             "sender": "bob",
             "recipient": "linda",
             "pickup": "home",
@@ -33,6 +34,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
             "message": "success",
             "parcel_order": {
                 "id": 1,
+                "user_id": 1,
                 "sender": "bob",
                 "recipient": "linda",
                 "pickup": "home",
@@ -51,6 +53,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
             "message": "success",
             "parcel_orders": [{
                 "id": 1,
+                "user_id": 1,
                 "sender": "bob",
                 "recipient": "linda",
                 "pickup": "home",
@@ -69,6 +72,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
             "message": "success",
             "parcel_order": {
                 "id": 1,
+                "user_id": 1,
                 "sender": "bob",
                 "recipient": "linda",
                 "pickup": "home",
@@ -89,6 +93,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
                                       content_type="application/json")
         self.assertEqual(post_response.status_code, 201)
         data = {
+            "user_id": 1,
             "sender": "bob",
             "recipient": "linda",
             "pickup": "home",
