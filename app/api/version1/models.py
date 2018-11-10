@@ -14,10 +14,11 @@ class ParcelOrderStore:
     def __init__(self):
         self.db = parcel_orders
 
-    def save(self, sender, recipient, pickup, destination, weight):
+    def save(self, user_id, sender, recipient, pickup, destination, weight):
         """Save a new order to the store."""
         payload = {
             "id": len(self.db) + 1,
+            "user_id": user_id,
             "sender": sender,
             "recipient": recipient,
             "pickup": pickup,
@@ -42,10 +43,11 @@ class ParcelOrderStore:
         order["status"] = CANCELLED
         return order
 
-    def update_by_id(self, order_id, sender, recipient, pickup, destination,
+    def update_by_id(self, order_id, user_id, sender, recipient, pickup, destination,
                      weight, status):
         """Save a new order to the store."""
         order = self.fetch_by_id(order_id)
+        order["user_id"] = user_id
         order["sender"] = sender
         order["recipient"] = recipient
         order["pickup"] = pickup
