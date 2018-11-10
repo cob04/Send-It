@@ -55,6 +55,12 @@ class ParcelOrder(Resource, ParcelOrderStore):
             }
             return make_response(jsonify(payload), 404)
 
+
+class ParcelOrderCancellation(Resource, ParcelOrderStore):
+
+    def __init__(self):
+        self.store = ParcelOrderStore()
+
     def put(self, order_id):
         request_data = request.get_json()
         user_id = request_data["user_id"]
