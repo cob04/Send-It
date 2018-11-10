@@ -24,3 +24,13 @@ class UserDataStoreTests(unittest.TestCase):
         self.assertTrue(self.store.authenticate("bob@gmail.com", "burgers"))
         self.assertFalse(self.store.authenticate("bob@gmail.com", "banana"))
         self.assertFalse(self.store.authenticate("bob", "burgers"))
+
+    def test_fetching_a_user_by_id(self):
+        self.store.save('bob', 'bob@email.com', 'burgers')
+        payload = self.store.fetch_by_id(1)
+        expected_json = {
+            "id": 1,
+            "name": "bob",
+            "email": "bob@email.com"
+        }
+        self.assertEqual(payload, expected_json)
