@@ -57,6 +57,11 @@ class ParcelOrderStore:
         self.db[order["id"] - 1] = order
         return self.db[order["id"] - 1]
 
+    def fetch_by_user_id(self, user_id):
+        """Return all orders of a specific user."""
+        orders = [order for order in self.all() if order["user_id"] == user_id]
+        return orders
+
 
 user_data = []
 

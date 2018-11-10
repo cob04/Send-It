@@ -71,3 +71,17 @@ class ParcelOrder(Resource, ParcelOrderStore):
         payload = {"message": "success",
                    "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
+
+
+class UserParcelOrderList(Resource, ParcelOrderStore):
+
+    def __init__(self):
+        self.store = ParcelOrderStore()
+
+    def get(self, user_id):
+        order = self.store.fetch_by_user_id(user_id)
+        payload = {
+            "message": "success",
+            "parcel_orders": order
+        }
+        return make_response(jsonify(payload))
