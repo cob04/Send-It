@@ -32,7 +32,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         response = self.app.get('/api/v1/users/1/parcels')
         self.assertEqual(response.status_code, 200)
         expected_json = {
-            "message": "success",
+            "message": "Success",
             "parcel_orders": [{
                 "id": 1,
                 "user_id": 1,
