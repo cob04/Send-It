@@ -62,3 +62,16 @@ class ParcelOrderStoreTests(unittest.TestCase):
                           'destination': 'restaurant',
                           'weight': '1kg',
                           'status': CANCELLED})
+
+    def test_updating_order(self):
+        self.store.save('bob', 'linda', 'home', 'restaurant', '1kg')
+        self.assertEqual(self.store.update_by_id(1, 'bob', 'linda',
+                                                 'home', 'restaurant',
+                                                 '1kg', CANCELLED),
+                         {'id': 1,
+                          'sender': 'bob',
+                          'recipient': 'linda',
+                          'pickup': 'home',
+                          'destination': 'restaurant',
+                          'weight': '1kg',
+                          'status': CANCELLED})

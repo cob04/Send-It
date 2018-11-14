@@ -53,3 +53,18 @@ class ParcelOrder(Resource, ParcelOrderStore):
                 "error": "Not found"
             }
             return make_response(jsonify(payload), 404)
+
+    def put(self, order_id):
+        request_data = request.get_json()
+        sender = request_data["sender"]
+        recipient = request_data["recipient"]
+        pickup = request_data["pickup"]
+        destination = request_data["destination"]
+        weight = request_data["weight"]
+        status = request_data["status"]
+
+        parcel_order = self.store.update_by_id(order_id, sender, recipient, pickup,
+                                       destination, weight, status)
+        payload = {"message": "success",
+                   "parcel_order": parcel_order}
+        return make_response(jsonify(payload), 201)

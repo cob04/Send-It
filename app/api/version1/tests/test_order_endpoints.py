@@ -5,7 +5,7 @@ import unittest
 
 from app import create_app
 
-from ..models import NOT_DELIVERED
+from ..models import CANCELLED, NOT_DELIVERED
 from ..models import parcel_orders
 
 
@@ -82,3 +82,27 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         expected_json = {"message": "failed", "error": "Not found"}
         self.assertEqual(response.get_json(), expected_json)
+
+    def test_cancelling_an_order(self):
+        post_response = self.app.post('/api/v1/parcels',
+                                      data=json.dumps(self.data),
+                                      content_type="application/json")
+        self.assertEqual(post_response.status_code, 201)
+        data = {
+            "sender": "bob",
+            "recipient": "linda",
+            "pickup": "home",
+            "destination": "restaurant",
+            "weight": "2kg",
+            "status": CANCELLED}
+
+        put_response = self.app.put('/api/v1/parcels/1',
+                                    data=json.dumps(data),
+                                    content_type="application/json")
+        data["id"] = 1
+        expected_json = {
+            "message": "success",
+            "parcel_order": data
+        }
+        self.assertEqual(put_response.status_code, 201)
+        self.assertEqual(put_response.get_json(), expected_json)
