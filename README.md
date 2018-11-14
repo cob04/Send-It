@@ -15,7 +15,11 @@ see instructions here [https://virtualenv.pypa.io/en/latest/userguide/#usage](ht
 In the project root folder run `pip install -r requirements.txt`
 this will install all the required external libraries.
 #### **Running the app**
-From the root folder run the app with the command `python run.py`
+From the root directory run the app with the command `python run.py`
+
+#### **Running tests**
+run the command `pytest` from the project root directory.
+
 #### **Running a specific feature(s).**
 Checkout a specific feature by checking out the branch of interest
 with the command `git checkout <branch name>`
