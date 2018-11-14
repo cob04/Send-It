@@ -93,9 +93,21 @@ class UserParcelOrderList(Resource, ParcelOrderStore):
         self.store = ParcelOrderStore()
 
     def get(self, user_id):
-        order = self.store.fetch_by_user_id(user_id)
-        payload = {
-            "message": "Success",
-            "parcel_orders": order
-        }
-        return make_response(jsonify(payload))
+        # check if user id exists, because we don't have
+        # a user store lets check if the user_id can be
+        # found in any of the orders.
+        user_ids = set([order['user_id'] for order in self.store.all()])
+        if user_id in user_ids:
+            order = self.store.fetch_by_user_id(user_id)
+            payload = {
+                "message": "Success",
+                "parcel_orders": order
+            }
+            return make_response(jsonify(payload), 200)
+        else:
+            payload = {
+                "message": "Sorry, we cannot find a user"
+                           " with the id %d" % user_id,
+                "error": "User Not Found"
+            }
+            return make_response(jsonify(payload), 404)
