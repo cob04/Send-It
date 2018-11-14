@@ -14,10 +14,10 @@ install:
 
 
 # run the tests using pytest with a coverage report
-scripts:
-  - pytest --cov-report --term-missing --cov=app
+script:
+  - pytest --cov-report term-missing --cov=app
 
 
 # Let coveralls know the test coverage after the tests are done.
-script:
+after_success:
   - coveralls
