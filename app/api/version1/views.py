@@ -3,6 +3,7 @@
 from flask import jsonify, make_response, request
 from flask_restful import Resource
 
+from .models import CANCELLED
 from .models import ParcelOrderStore
 
 
@@ -63,20 +64,27 @@ class ParcelOrderCancellation(Resource, ParcelOrderStore):
 
     def put(self, order_id):
         request_data = request.get_json()
-        user_id = request_data["user_id"]
-        sender = request_data["sender"]
-        recipient = request_data["recipient"]
-        pickup = request_data["pickup"]
-        destination = request_data["destination"]
-        weight = request_data["weight"]
         status = request_data["status"]
-
-        parcel_order = self.store.update_by_id(order_id, user_id, sender,
-                                               recipient, pickup, destination,
-                                               weight, status)
-        payload = {"message": "Success",
-                   "parcel_order": parcel_order}
-        return make_response(jsonify(payload), 201)
+        try:
+            if status == CANCELLED:
+                order = self.store.cancel_by_id(order_id)
+                payload = {
+                    "message": "Success",
+                    "parcel_order": order
+                }
+                return make_response(jsonify(payload), 201)
+            else:
+                payload = {
+                    "message": "Please set status field to %s" % CANCELLED,
+                    "error": "Invalid field entry"
+                }
+                return make_response(jsonify(payload), 400)
+        except IndexError:
+            payload = {
+                "message": "Sorry, we cannot find that order",
+                "error": "Not found"
+            }
+            return make_response(jsonify(payload), 404)
 
 
 class UserParcelOrderList(Resource, ParcelOrderStore):
