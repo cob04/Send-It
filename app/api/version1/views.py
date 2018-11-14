@@ -13,14 +13,15 @@ class ParcelOrderList(Resource, ParcelOrderStore):
 
     def post(self):
         request_data = request.get_json()
+        user_id = request_data["user_id"]
         sender = request_data["sender"]
         recipient = request_data["recipient"]
         pickup = request_data["pickup"]
         destination = request_data["destination"]
         weight = request_data["weight"]
 
-        parcel_order = self.store.save(sender, recipient, pickup, destination,
-                                       weight)
+        parcel_order = self.store.save(user_id, sender, recipient, pickup,
+                                       destination, weight)
         payload = {"message": "success",
                    "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
@@ -56,6 +57,7 @@ class ParcelOrder(Resource, ParcelOrderStore):
 
     def put(self, order_id):
         request_data = request.get_json()
+        user_id = request_data["user_id"]
         sender = request_data["sender"]
         recipient = request_data["recipient"]
         pickup = request_data["pickup"]
@@ -63,8 +65,23 @@ class ParcelOrder(Resource, ParcelOrderStore):
         weight = request_data["weight"]
         status = request_data["status"]
 
-        parcel_order = self.store.update_by_id(order_id, sender, recipient, pickup,
-                                       destination, weight, status)
+        parcel_order = self.store.update_by_id(order_id, user_id, sender,
+                                               recipient, pickup, destination,
+                                               weight, status)
         payload = {"message": "success",
                    "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
+
+
+class UserParcelOrderList(Resource, ParcelOrderStore):
+
+    def __init__(self):
+        self.store = ParcelOrderStore()
+
+    def get(self, user_id):
+        order = self.store.fetch_by_user_id(user_id)
+        payload = {
+            "message": "success",
+            "parcel_orders": order
+        }
+        return make_response(jsonify(payload))
