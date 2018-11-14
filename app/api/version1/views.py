@@ -22,14 +22,14 @@ class ParcelOrderList(Resource, ParcelOrderStore):
 
         parcel_order = self.store.save(user_id, sender, recipient, pickup,
                                        destination, weight)
-        payload = {"message": "success",
+        payload = {"message": "Success",
                    "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
 
     def get(self):
         orders = self.store.all()
         payload = {
-            "message": "success",
+            "message": "Success",
             "parcel_orders": orders
         }
         return make_response(jsonify(payload), 200)
@@ -44,13 +44,13 @@ class ParcelOrder(Resource, ParcelOrderStore):
         try:
             order = self.store.fetch_by_id(order_id)
             payload = {
-                "message": "success",
+                "message": "Success",
                 "parcel_order": order
             }
             return make_response(jsonify(payload), 200)
         except IndexError:
             payload = {
-                "message": "failed",
+                "message": "Sorry, we cannot find such an order",
                 "error": "Not found"
             }
             return make_response(jsonify(payload), 404)
@@ -74,7 +74,7 @@ class ParcelOrderCancellation(Resource, ParcelOrderStore):
         parcel_order = self.store.update_by_id(order_id, user_id, sender,
                                                recipient, pickup, destination,
                                                weight, status)
-        payload = {"message": "success",
+        payload = {"message": "Success",
                    "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
 
@@ -87,7 +87,7 @@ class UserParcelOrderList(Resource, ParcelOrderStore):
     def get(self, user_id):
         order = self.store.fetch_by_user_id(user_id)
         payload = {
-            "message": "success",
+            "message": "Success",
             "parcel_orders": order
         }
         return make_response(jsonify(payload))
