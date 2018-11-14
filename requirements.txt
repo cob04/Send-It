@@ -1,3 +1,6 @@
 # base dependecies
 
 Flask==1.0.2
+Flask-RESTful==0.3.6
+pytest==3.10.0
+coverage==4.5.1

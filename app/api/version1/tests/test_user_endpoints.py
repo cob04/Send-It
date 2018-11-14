@@ -5,7 +5,7 @@ import unittest
 
 from app import create_app
 
-from ..models import CANCELLED, NOT_DELIVERED
+from ..models import NOT_DELIVERED
 from ..models import parcel_orders
 
 
@@ -32,7 +32,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         response = self.app.get('/api/v1/users/1/parcels')
         self.assertEqual(response.status_code, 200)
         expected_json = {
-            "message": "success",
+            "message": "Success",
             "parcel_orders": [{
                 "id": 1,
                 "user_id": 1,
@@ -42,4 +42,18 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
                 "destination": "restaurant",
                 "weight": "2kg",
                 "status": NOT_DELIVERED}]}
+        self.assertEqual(expected_json, response.get_json())
+
+    def test_fetching_orders_by_user_id_with_unexistant_id(self):
+        self.app.post('/api/v1/parcels',
+                      data=json.dumps(self.data),
+                      content_type="application/json")
+        test_user_id = 3
+        response = self.app.get('/api/v1/users/%d/parcels' % test_user_id)
+        self.assertEqual(response.status_code, 404)
+        expected_json = {
+            "message": "Sorry, we cannot find a user with"
+                       " the id %d" % test_user_id,
+            "error": "User Not Found"
+        }
         self.assertEqual(expected_json, response.get_json())

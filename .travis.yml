@@ -13,9 +13,9 @@ install:
   - pip install coveralls
 
 
-# run the tests using nosetest with a coverage report
+# run the tests using pytest with a coverage report
 scripts:
-  - nosetests --with-coverage --cover-package=app
+  - pytest --cov-report --term-missing --cov=app
 
 
 # Let coveralls know the test coverage after the tests are done.

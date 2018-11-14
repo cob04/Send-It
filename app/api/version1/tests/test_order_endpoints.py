@@ -5,11 +5,11 @@ import unittest
 
 from app import create_app
 
-from ..models import CANCELLED, NOT_DELIVERED
+from ..models import CANCELLED, NOT_DELIVERED, IN_TRANSIT
 from ..models import parcel_orders
 
 
-class ParcelOrderEnpointsTests(unittest.TestCase):
+class ParcelOrderEndpointsTests(unittest.TestCase):
 
     def setUp(self):
         create_app().testing = True
@@ -31,7 +31,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
                                  content_type="application/json")
         self.assertEqual(response.status_code, 201)
         expected_json = {
-            "message": "success",
+            "message": "Success",
             "parcel_order": {
                 "id": 1,
                 "user_id": 1,
@@ -50,7 +50,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         response = self.app.get('/api/v1/parcels')
         self.assertEqual(response.status_code, 200)
         expected_json = {
-            "message": "success",
+            "message": "Success",
             "parcel_orders": [{
                 "id": 1,
                 "user_id": 1,
@@ -69,7 +69,7 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         response = self.app.get('/api/v1/parcels/1')
         self.assertEqual(response.status_code, 200)
         expected_json = {
-            "message": "success",
+            "message": "Success",
             "parcel_order": {
                 "id": 1,
                 "user_id": 1,
@@ -84,7 +84,10 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
     def test_get_by_id_when_order_does_not_exist(self):
         response = self.app.get('/api/v1/parcels/2')
         self.assertEqual(response.status_code, 404)
-        expected_json = {"message": "failed", "error": "Not found"}
+        expected_json = {
+            "message": "Sorry, we cannot find such an order",
+            "error": "Not found"
+        }
         self.assertEqual(response.get_json(), expected_json)
 
     def test_cancelling_an_order(self):
@@ -93,21 +96,64 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
                                       content_type="application/json")
         self.assertEqual(post_response.status_code, 201)
         data = {
-            "user_id": 1,
-            "sender": "bob",
-            "recipient": "linda",
-            "pickup": "home",
-            "destination": "restaurant",
-            "weight": "2kg",
-            "status": CANCELLED}
+            "status": CANCELLED
+        }
 
         put_response = self.app.put('/api/v1/parcels/1/cancel',
                                     data=json.dumps(data),
                                     content_type="application/json")
         data["id"] = 1
         expected_json = {
-            "message": "success",
-            "parcel_order": data
+            "message": "Success",
+            "parcel_order": {
+                "id": 1,
+                "user_id": 1,
+                "sender": "bob",
+                "recipient": "linda",
+                "pickup": "home",
+                "destination": "restaurant",
+                "weight": "2kg",
+                "status": CANCELLED
+            }
         }
         self.assertEqual(put_response.status_code, 201)
+        self.assertEqual(put_response.get_json(), expected_json)
+
+    def test_cancelling_an_order_with_status_not_cancelled(self):
+        post_response = self.app.post('/api/v1/parcels',
+                                      data=json.dumps(self.data),
+                                      content_type="application/json")
+        self.assertEqual(post_response.status_code, 201)
+        data = {
+            "status": IN_TRANSIT
+        }
+
+        put_response = self.app.put('/api/v1/parcels/1/cancel',
+                                    data=json.dumps(data),
+                                    content_type="application/json")
+        expected_json = {
+            "message": "Please set status field to %s" % CANCELLED,
+            "error": "Invalid field entry"
+        }
+        self.assertEqual(put_response.status_code, 400)
+        self.assertEqual(put_response.get_json(), expected_json)
+
+    def test_cancelling_an_order_with_wrong_order_id(self):
+        post_response = self.app.post('/api/v1/parcels',
+                                      data=json.dumps(self.data),
+                                      content_type="application/json")
+        self.assertEqual(post_response.status_code, 201)
+        data = {
+            "status": CANCELLED
+        }
+
+        put_response = self.app.put('/api/v1/parcels/3/cancel',
+                                    data=json.dumps(data),
+                                    content_type="application/json")
+        data["id"] = 1
+        expected_json = {
+            "message": "Sorry, we cannot find that order",
+            "error": "Not found"
+        }
+        self.assertEqual(put_response.status_code, 404)
         self.assertEqual(put_response.get_json(), expected_json)

@@ -3,6 +3,7 @@
 from flask import jsonify, make_response, request
 from flask_restful import Resource
 
+from .models import CANCELLED
 from .models import ParcelOrderStore
 
 
@@ -22,14 +23,14 @@ class ParcelOrderList(Resource, ParcelOrderStore):
 
         parcel_order = self.store.save(user_id, sender, recipient, pickup,
                                        destination, weight)
-        payload = {"message": "success",
+        payload = {"message": "Success",
                    "parcel_order": parcel_order}
         return make_response(jsonify(payload), 201)
 
     def get(self):
         orders = self.store.all()
         payload = {
-            "message": "success",
+            "message": "Success",
             "parcel_orders": orders
         }
         return make_response(jsonify(payload), 200)
@@ -44,13 +45,13 @@ class ParcelOrder(Resource, ParcelOrderStore):
         try:
             order = self.store.fetch_by_id(order_id)
             payload = {
-                "message": "success",
+                "message": "Success",
                 "parcel_order": order
             }
             return make_response(jsonify(payload), 200)
         except IndexError:
             payload = {
-                "message": "failed",
+                "message": "Sorry, we cannot find such an order",
                 "error": "Not found"
             }
             return make_response(jsonify(payload), 404)
@@ -63,20 +64,27 @@ class ParcelOrderCancellation(Resource, ParcelOrderStore):
 
     def put(self, order_id):
         request_data = request.get_json()
-        user_id = request_data["user_id"]
-        sender = request_data["sender"]
-        recipient = request_data["recipient"]
-        pickup = request_data["pickup"]
-        destination = request_data["destination"]
-        weight = request_data["weight"]
         status = request_data["status"]
-
-        parcel_order = self.store.update_by_id(order_id, user_id, sender,
-                                               recipient, pickup, destination,
-                                               weight, status)
-        payload = {"message": "success",
-                   "parcel_order": parcel_order}
-        return make_response(jsonify(payload), 201)
+        try:
+            if status == CANCELLED:
+                order = self.store.cancel_by_id(order_id)
+                payload = {
+                    "message": "Success",
+                    "parcel_order": order
+                }
+                return make_response(jsonify(payload), 201)
+            else:
+                payload = {
+                    "message": "Please set status field to %s" % CANCELLED,
+                    "error": "Invalid field entry"
+                }
+                return make_response(jsonify(payload), 400)
+        except IndexError:
+            payload = {
+                "message": "Sorry, we cannot find that order",
+                "error": "Not found"
+            }
+            return make_response(jsonify(payload), 404)
 
 
 class UserParcelOrderList(Resource, ParcelOrderStore):
@@ -85,9 +93,21 @@ class UserParcelOrderList(Resource, ParcelOrderStore):
         self.store = ParcelOrderStore()
 
     def get(self, user_id):
-        order = self.store.fetch_by_user_id(user_id)
-        payload = {
-            "message": "success",
-            "parcel_orders": order
-        }
-        return make_response(jsonify(payload))
+        # check if user id exists, because we don't have
+        # a user store lets check if the user_id can be
+        # found in any of the orders.
+        user_ids = set([order['user_id'] for order in self.store.all()])
+        if user_id in user_ids:
+            order = self.store.fetch_by_user_id(user_id)
+            payload = {
+                "message": "Success",
+                "parcel_orders": order
+            }
+            return make_response(jsonify(payload), 200)
+        else:
+            payload = {
+                "message": "Sorry, we cannot find a user"
+                           " with the id %d" % user_id,
+                "error": "User Not Found"
+            }
+            return make_response(jsonify(payload), 404)
