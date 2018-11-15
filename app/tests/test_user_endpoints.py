@@ -75,10 +75,12 @@ class UserAccountTests(unittest.TestCase):
                                  data=json.dumps(self.data),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 201)
-        data = self.data
-        data["id"] = 1
         expected_json = {
-            "message": "success",
-            "user": data
+            "message": "Success",
+            "user": {
+                "name": "bob",
+                "email": "bob@email.com",
+                "id": 1
+            }
         }
-        self.assertEqual(response.get_json, expected_json)
+        self.assertEqual(response.get_json(), expected_json)
