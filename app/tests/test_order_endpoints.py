@@ -5,8 +5,8 @@ import unittest
 
 from app import create_app
 
-from ..models import CANCELLED, NOT_DELIVERED, IN_TRANSIT
-from ..models import parcel_orders
+from app.api.version1.models import CANCELLED, NOT_DELIVERED, IN_TRANSIT
+from app.api.version1.models import parcel_orders
 
 
 class ParcelOrderEndpointsTests(unittest.TestCase):

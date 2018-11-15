@@ -2,7 +2,7 @@
 
 import unittest
 
-from ..models import UserDataStore
+from app.api.version1.models import UserDataStore
 
 
 class UserDataStoreTests(unittest.TestCase):

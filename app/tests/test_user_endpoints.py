@@ -5,8 +5,8 @@ import unittest
 
 from app import create_app
 
-from ..models import NOT_DELIVERED
-from ..models import parcel_orders
+from app.api.version1.models import NOT_DELIVERED
+from app.api.version1.models import parcel_orders
 
 
 class ParcelOrderEnpointsTests(unittest.TestCase):

@@ -2,8 +2,8 @@
 
 import unittest
 
-from ..models import ParcelOrderStore
-from ..models import CANCELLED, NOT_DELIVERED
+from app.api.version1.models import ParcelOrderStore
+from app.api.version1.models import CANCELLED, NOT_DELIVERED
 
 
 class ParcelOrderStoreTests(unittest.TestCase):
