@@ -57,3 +57,28 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
             "error": "User Not Found"
         }
         self.assertEqual(expected_json, response.get_json())
+
+
+class UserAccountTests(unittest.TestCase):
+
+    def setUp(self):
+        create_app().testing = True
+        self.app = create_app().test_client()
+        self.data = {
+            "name": "bob",
+            "email": "bob@email.com",
+            "password": "burgers",
+        }
+
+    def test_adding_a_new_user(self):
+        response = self.app.post('/api/v1/users',
+                                 data=json.dumps(self.data),
+                                 content_type="application/json")
+        self.assertEqual(response.status_code, 201)
+        data = self.data
+        data["id"] = 1
+        expected_json = {
+            "message": "success",
+            "user": data
+        }
+        self.assertEqual(response.get_json, expected_json)
