@@ -71,6 +71,7 @@ class UserAccountTests(unittest.TestCase):
         }
 
     def test_adding_a_new_user(self):
+<<<<<<< HEAD
         response = self.app.post('/api/v2/users',
                                  data=json.dumps(self.data),
                                  content_type="application/json")
