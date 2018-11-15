@@ -71,7 +71,7 @@ class UserAccountTests(unittest.TestCase):
         }
 
     def test_adding_a_new_user(self):
-        response = self.app.post('/api/v1/users',
+        response = self.app.post('/api/v2/users',
                                  data=json.dumps(self.data),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 201)
