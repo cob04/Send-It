@@ -138,7 +138,7 @@ class UserList(Resource, UserDataStore):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('name', type=int, required=True,
+        parser.add_argument('name', type=str, required=True,
                             help="A user must have a name")
         parser.add_argument('email', type=str, required=True,
                             help="A user must have an email address")

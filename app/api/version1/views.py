@@ -1,10 +1,10 @@
 # views.py
 
-from flask import jsonify, make_response, request
-from flask_restful import fields, marshal_with, reqparse, Resource
+from flask import jsonify, make_response
+from flask_restful import reqparse, Resource
 
 from .models import CANCELLED
-from .models import ParcelOrderStore
+from .models import ParcelOrderStore, UserDataStore
 
 
 class ParcelOrderList(Resource, ParcelOrderStore):

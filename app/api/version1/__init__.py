@@ -16,4 +16,3 @@ api.add_resource(ParcelOrderCancellation, '/parcels/<int:order_id>/cancel',
                  strict_slashes=False)
 api.add_resource(UserParcelOrderList, '/users/<int:user_id>/parcels',
                  strict_slashes=False)
-
