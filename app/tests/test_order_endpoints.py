@@ -43,6 +43,26 @@ class ParcelOrderEndpointsTests(unittest.TestCase):
                 "status": NOT_DELIVERED}}
         self.assertEqual(response.get_json(), expected_json)
 
+    def test_post_new_parcel_validation_with_defective_data(self):
+        defective_data = {
+            "user_id": "my id is 1",
+            "sender": "bob",
+            "recipient": "linda",
+            "pickup": "home",
+            "destination": "restaurant",
+            "weight": 2
+        }
+        response = self.app.post('/api/v1/parcels',
+                                 data=json.dumps(defective_data),
+                                 content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        expected_json = {
+            "message": {
+                "user_id": "Order must have an integer user id"
+            }
+        }
+        self.assertEqual(response.get_json(), expected_json)
+
     def test_get_all_parcel_delivery_orders(self):
         self.app.post('/api/v1/parcels',
                       data=json.dumps(self.data),

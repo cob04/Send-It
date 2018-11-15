@@ -1,7 +1,7 @@
 # views.py
 
 from flask import jsonify, make_response, request
-from flask_restful import Resource
+from flask_restful import fields, marshal_with, reqparse, Resource
 
 from .models import CANCELLED
 from .models import ParcelOrderStore
@@ -13,13 +13,28 @@ class ParcelOrderList(Resource, ParcelOrderStore):
         self.store = ParcelOrderStore()
 
     def post(self):
-        request_data = request.get_json()
-        user_id = request_data["user_id"]
-        sender = request_data["sender"]
-        recipient = request_data["recipient"]
-        pickup = request_data["pickup"]
-        destination = request_data["destination"]
-        weight = request_data["weight"]
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int, required=True,
+                            help="Order must have an integer user id")
+        parser.add_argument('sender', type=str, required=True,
+                            help="Order must have a sender")
+        parser.add_argument('recipient', type=str, required=True,
+                            help="Order must have a recipient")
+        parser.add_argument('pickup', type=str, required=True,
+                            help="Order must have a pickup")
+        parser.add_argument('destination', type=str, required=True,
+                            help="Order must have a destination")
+        parser.add_argument('weight', type=str, required=True,
+                            help="Order must have a weight")
+
+        args = parser.parse_args()
+
+        user_id = args["user_id"]
+        sender = args["sender"]
+        recipient = args["recipient"]
+        pickup = args["pickup"]
+        destination = args["destination"]
+        weight = args["weight"]
 
         parcel_order = self.store.save(user_id, sender, recipient, pickup,
                                        destination, weight)
@@ -63,8 +78,11 @@ class ParcelOrderCancellation(Resource, ParcelOrderStore):
         self.store = ParcelOrderStore()
 
     def put(self, order_id):
-        request_data = request.get_json()
-        status = request_data["status"]
+        parser = reqparse.RequestParser()
+        parser.add_argument('status', type=str, required=True,
+                            help="You must have a status")
+        args = parser.parse_args()
+        status = args["status"]
         try:
             if status == CANCELLED:
                 order = self.store.cancel_by_id(order_id)
