@@ -18,7 +18,8 @@ class UserDataStoreTests(unittest.TestCase):
         payload = self.store.save('bob', 'bob@email.com', 'burgers')
         self.assertEqual(payload, {'id': 1,
                                    'name': 'bob',
-                                   'email': 'bob@email.com'})
+                                   'email': 'bob@email.com',
+                                   'login_status': 'logged out'})
         # test user emails are unique
         payload2 = self.store.save('bobby', 'bob@email.com', 'robert')
         self.assertEqual(payload2, {
