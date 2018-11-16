@@ -19,6 +19,11 @@ class UserDataStoreTests(unittest.TestCase):
         self.assertEqual(payload, {'id': 1,
                                    'name': 'bob',
                                    'email': 'bob@email.com'})
+        # test user emails are unique
+        payload2 = self.store.save('bobby', 'bob@email.com', 'robert')
+        self.assertEqual(payload2, {
+            "error": "Email address already in use"
+        })
 
     def test_authenticating_a_user(self):
         self.store.save('bob', 'bob@gmail.com', 'burgers')
@@ -40,13 +45,10 @@ class UserDataStoreTests(unittest.TestCase):
         self.store.save('bob', 'bob@gmail.com', 'burgers')
         payload = self.store.login_user('bob@gmail.com', 'burgers')
         expected_json =  {
-            "message": "Success",
-            "user": {
-                "id": 1,
-                "name": "bob",
-                "email": "bob@gmail.com",
-                "login_status": "logged in"
-            }
+            "id": 1,
+            "name": "bob",
+            "email": "bob@gmail.com",
+            "login_status": "logged in"
         }
         self.assertEqual(payload, expected_json)
 
@@ -55,7 +57,6 @@ class UserDataStoreTests(unittest.TestCase):
         payload3 = self.store.login_user("bob@gmail.com", "burgerking")
         payload4 = self.store.login_user("linda", "lindapassword")
         expected_json = {
-            "message": "Your email or password is incorrect",
             "error": "Invalid Credentials"
         }
         self.assertEqual(payload2, expected_json)
