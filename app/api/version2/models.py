@@ -63,6 +63,10 @@ class ParcelOrderStore:
         return orders
 
 
+LOGGED_IN = "logged in"
+LOGGED_OUT = "logged out"
+
+
 user_data = []
 
 
@@ -73,11 +77,16 @@ class UserDataStore:
 
     def save(self, name, email, password):
         """Save a new user to the store."""
+        for user in self.db:
+            if user["email"] == email:
+                return {"error": "Email address already in use"}
+
         new_user = {
             "id": len(self.db) + 1,
             "name": name,
             "email": email,
-            "password": password
+            "password": password,
+            "login_status": LOGGED_OUT
         }
         self.db.append(new_user)
         user = self.db[new_user["id"] - 1]
@@ -105,3 +114,17 @@ class UserDataStore:
             "email": user["email"]
         }
         return payload
+
+    def login_user(self, email, password):
+        """Login in a user by marking the store."""
+        if self.authenticate(email, password):
+            for user in self.db:
+                if user["email"] == email:
+                    user["login_status"] = LOGGED_IN
+                    return {
+                        "id": user["id"],
+                        "name": user["name"],
+                        "email": user["email"],
+                        "login_status": user["login_status"]
+                    }
+        return {"error": "Invalid Credentials"}
