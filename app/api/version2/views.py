@@ -157,3 +157,34 @@ class UserList(Resource, UserDataStore):
             "user": new_user
         }
         return make_response(jsonify(payload), 201)
+
+class AuthLogin(Resource, UserDataStore):
+
+    def __init__(self):
+        self.store = UserDataStore()
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', type=str, required=True,
+                            help="Email address is required")
+        parser.add_argument('password', type=str, required=True,
+                            help="Password is required")
+
+        args = parser.parse_args()
+
+        email = args["email"]
+        password = args["password"]
+        
+        login_info = self.store.login_user(email, password)
+        if "error" in set(login_info.keys()):
+            payload = {
+                "message": "Your email or password is invalid",
+                "error": "Invalid credentials",
+            }
+            return make_response(jsonify(payload), 400)
+        else:
+            payload = {
+                "message": "Success",
+                "user": login_info,
+            }
+            return make_response(jsonify(payload), 200)
