@@ -2,7 +2,7 @@
 
 import unittest
 
-from app.api.version2.models import UserDataStore
+from app.api.version2.models import UserDataStore, LOGGED_OUT
 
 
 class UserDataStoreTests(unittest.TestCase):
@@ -62,3 +62,25 @@ class UserDataStoreTests(unittest.TestCase):
         self.assertEqual(payload2, expected_json)
         self.assertEqual(payload3, expected_json)
         self.assertEqual(payload4, expected_json)
+
+    def test_logging_out_a_user(self):
+        user = self.store.save('bob', 'bob@email.com', 'burgers')
+        self.store.login_user('bob@email.com', 'burgers')
+        login_info = self.store.logout_user('bob@email.com')
+        user_login_status  = self.store.db[user["id"] - 1]["login_status"]
+        self.assertEqual(user_login_status, LOGGED_OUT)
+        self.assertEqual(login_info, {
+            "message": "You have been successfully logged out."
+        })
+
+        # logout when already logged out.
+        already_logged_out_info = self.store.logout_user("bob@email.com")
+        self.assertEqual(already_logged_out_info, {
+            "message": "Your email is invalid or you are already logged out."
+        })
+
+        # logout with wrong email
+        wrong_email_info = self.store.logout_user("bobby@gmail.com")
+        self.assertEqual(wrong_email_info, {
+            "message": "Your email is invalid or you are already logged out."
+        })
