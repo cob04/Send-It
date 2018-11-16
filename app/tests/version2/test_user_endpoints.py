@@ -5,8 +5,8 @@ import unittest
 
 from app import create_app
 
-from app.api.version1.models import NOT_DELIVERED
-from app.api.version1.models import parcel_orders
+from app.api.version2.models import NOT_DELIVERED
+from app.api.version2.models import parcel_orders, user_data
 
 
 class ParcelOrderEnpointsTests(unittest.TestCase):
@@ -26,10 +26,10 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         parcel_orders.clear()
 
     def test_fetching_orders_by_user_id(self):
-        self.app.post('/api/v1/parcels',
+        self.app.post('/api/v2/parcels',
                       data=json.dumps(self.data),
                       content_type="application/json")
-        response = self.app.get('/api/v1/users/1/parcels')
+        response = self.app.get('/api/v2/users/1/parcels')
         self.assertEqual(response.status_code, 200)
         expected_json = {
             "message": "Success",
@@ -45,11 +45,11 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
         self.assertEqual(expected_json, response.get_json())
 
     def test_fetching_orders_by_user_id_with_unexistant_id(self):
-        self.app.post('/api/v1/parcels',
+        self.app.post('/api/v2/parcels',
                       data=json.dumps(self.data),
                       content_type="application/json")
         test_user_id = 3
-        response = self.app.get('/api/v1/users/%d/parcels' % test_user_id)
+        response = self.app.get('/api/v2/users/%d/parcels' % test_user_id)
         self.assertEqual(response.status_code, 404)
         expected_json = {
             "message": "Sorry, we cannot find a user with"
@@ -69,6 +69,9 @@ class UserAccountTests(unittest.TestCase):
             "email": "bob@email.com",
             "password": "burgers",
         }
+
+    def tearDown(self):
+        user_data.clear()
 
     def test_adding_a_new_user(self):
         response = self.app.post('/api/v2/users',
