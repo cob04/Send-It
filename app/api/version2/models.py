@@ -43,8 +43,8 @@ class ParcelOrderStore:
         order["status"] = CANCELLED
         return order
 
-    def update_by_id(self, order_id, user_id, sender, recipient, pickup, destination,
-                     weight, status):
+    def update_by_id(self, order_id, user_id, sender, recipient, pickup,
+                     destination, weight, status):
         """Save a new order to the store."""
         order = self.fetch_by_id(order_id)
         order["user_id"] = user_id
@@ -63,6 +63,10 @@ class ParcelOrderStore:
         return orders
 
 
+LOGGED_IN = "logged in"
+LOGGED_OUT = "logged out"
+
+
 user_data = []
 
 
@@ -73,11 +77,16 @@ class UserDataStore:
 
     def save(self, name, email, password):
         """Save a new user to the store."""
+        for user in self.db:
+            if user["email"] == email:
+                return {"error": "Email address already in use"}
+
         new_user = {
             "id": len(self.db) + 1,
             "name": name,
             "email": email,
-            "password": password
+            "password": password,
+            "login_status": LOGGED_OUT
         }
         self.db.append(new_user)
         user = self.db[new_user["id"] - 1]
@@ -105,3 +114,29 @@ class UserDataStore:
             "email": user["email"]
         }
         return payload
+
+    def login_user(self, email, password):
+        """Login in a user by marking the store."""
+        if self.authenticate(email, password):
+            for user in self.db:
+                if user["email"] == email:
+                    user["login_status"] = LOGGED_IN
+                    return {
+                        "id": user["id"],
+                        "name": user["name"],
+                        "email": user["email"],
+                        "login_status": user["login_status"]
+                    }
+        return {"error": "Invalid Credentials"}
+
+    def logout_user(self, email):
+        """logout a user by marking the store."""
+        for user in self.db:
+            if user["email"] == email and user["login_status"] == LOGGED_IN:
+                user["login_status"] = LOGGED_OUT
+                return {"message": "You have been successfully logged out."}
+            else:
+                return {
+                    "message": "Your email is invalid or you"
+                             " are already logged out."
+                }

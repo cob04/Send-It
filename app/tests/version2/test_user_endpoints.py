@@ -5,7 +5,7 @@ import unittest
 
 from app import create_app
 
-from app.api.version2.models import NOT_DELIVERED
+from app.api.version2.models import NOT_DELIVERED, LOGGED_IN
 from app.api.version2.models import parcel_orders, user_data
 
 
@@ -87,3 +87,38 @@ class UserAccountTests(unittest.TestCase):
             }
         }
         self.assertEqual(response.get_json(), expected_json)
+
+    def test_logging_in_a_user(self):
+        self.app.post('/api/v2/users',
+                      data=json.dumps(self.data),
+                      content_type="application/json")
+        credentials = {
+            "email": "bob@email.com",
+            "password": "burgers"
+        }
+        expected_json = {
+            "message": "Success",
+            "user": {
+                "name": "bob",
+                "email": "bob@email.com",
+                "id": 1,
+                "login_status": LOGGED_IN,
+            }
+        }
+        response1 = self.app.post('/api/v2/auth/login',
+                                  data=json.dumps(credentials),
+                                  content_type="application/json")
+        self.assertEqual(response1.status_code, 200)
+        self.assertEqual(response1.get_json(), expected_json)
+
+        # test using wrong credentials
+        credentials["email"] = "bobby@gmail.com"
+        error_json = {
+            "message": "Your email or password is invalid",
+            "error": "Invalid credentials",
+        }
+        response2 = self.app.post('/api/v2/auth/login',
+                                  data=json.dumps(credentials),
+                                  content_type="application/json")
+        self.assertEqual(response2.status_code, 400)
+        self.assertEqual(response2.get_json(), error_json)
