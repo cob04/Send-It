@@ -43,8 +43,8 @@ class ParcelOrderStore:
         order["status"] = CANCELLED
         return order
 
-    def update_by_id(self, order_id, user_id, sender, recipient, pickup, destination,
-                     weight, status):
+    def update_by_id(self, order_id, user_id, sender, recipient, pickup,
+                     destination, weight, status):
         """Save a new order to the store."""
         order = self.fetch_by_id(order_id)
         order["user_id"] = user_id
@@ -128,3 +128,15 @@ class UserDataStore:
                         "login_status": user["login_status"]
                     }
         return {"error": "Invalid Credentials"}
+
+    def logout_user(self, email):
+        """logout a user by marking the store."""
+        for user in self.db:
+            if user["email"] == email and user["login_status"] == LOGGED_IN:
+                user["login_status"] = LOGGED_OUT
+                return {"message": "You have been successfully logged out."}
+            else:
+                return {
+                    "message": "Your email is invalid or you"
+                             " are already logged out."
+                }
