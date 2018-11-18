@@ -129,3 +129,31 @@ class UserParcelOrderList(Resource, ParcelOrderStore):
                 "error": "User Not Found"
             }
             return make_response(jsonify(payload), 404)
+
+
+class UserList(Resource, UserDataStore):
+
+    def __init__(self):
+        self.store = UserDataStore()
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', type=str, required=True,
+                            help="A user must have a name")
+        parser.add_argument('email', type=str, required=True,
+                            help="A user must have an email address")
+        parser.add_argument('password', type=str, required=True,
+                            help="A user must have a password")
+
+        args = parser.parse_args()
+
+        name = args["name"]
+        email = args["email"]
+        password = args["password"]
+
+        new_user = self.store.save(name, email, password)
+        payload = {
+            "message": "Success",
+            "user": new_user
+        }
+        return make_response(jsonify(payload), 201)

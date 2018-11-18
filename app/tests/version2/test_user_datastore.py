@@ -2,7 +2,7 @@
 
 import unittest
 
-from app.api.version1.models import UserDataStore
+from app.api.version2.models import UserDataStore
 
 
 class UserDataStoreTests(unittest.TestCase):
@@ -12,8 +12,9 @@ class UserDataStoreTests(unittest.TestCase):
 
     def tearDown(self):
         self.store.db.clear()
-
-    def test_adding_order_to_store(self):
+ 
+    def test_adding_user_to_store(self):
+        self.store.db.clear()
         payload = self.store.save('bob', 'bob@email.com', 'burgers')
         self.assertEqual(payload, {'id': 1,
                                    'name': 'bob',
