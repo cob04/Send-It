@@ -39,10 +39,7 @@ class ParcelOrderList(Resource):
 
     def get(self):
         parcel_objects = self.order_manager.fetch_all()
-        orders = []
-        for parcel in parcel_objects:
-            orders.append(parcel.to_dict())
-
+        orders = [parcel.to_dict() for parcel in parcel_objects]
         payload = {
             "message": "Success",
             "parcel_orders": orders
