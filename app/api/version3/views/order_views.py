@@ -38,3 +38,23 @@ class ParcelOrderList(Resource):
             "parcel_orders": orders
         }
         return payload, 200
+
+
+class ParcelOrder(Resource):
+
+    def __init__(self):
+        self.order_manager = ParcelOrderManager()
+
+    def get(self, parcel_id):
+        parcel = self.order_manager.fetch_by_id(parcel_id)
+        if parcel:
+            payload = {
+                "message": "Success",
+                "parcel_order": parcel.to_dict()
+            }
+            return payload, 200
+        else:
+            payload = {
+                "message": "Sorry, we cannot find such a parcel",
+                "error": "Not found"
+            }
