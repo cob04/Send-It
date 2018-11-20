@@ -5,8 +5,8 @@ import unittest
 
 from app import create_app
 
-from ..models import NOT_DELIVERED
-from ..models import parcel_orders
+from app.api.version1.models import NOT_DELIVERED
+from app.api.version1.models import parcel_orders, user_data
 
 
 class ParcelOrderEnpointsTests(unittest.TestCase):
@@ -57,3 +57,33 @@ class ParcelOrderEnpointsTests(unittest.TestCase):
             "error": "User Not Found"
         }
         self.assertEqual(expected_json, response.get_json())
+
+
+class UserAccountTests(unittest.TestCase):
+
+    def setUp(self):
+        create_app().testing = True
+        self.app = create_app().test_client()
+        self.data = {
+            "name": "bob",
+            "email": "bob@email.com",
+            "password": "burgers",
+        }
+
+    def tearDown(self):
+        user_data.clear()
+
+    def test_adding_a_new_user(self):
+        response = self.app.post('/api/v2/users',
+                                 data=json.dumps(self.data),
+                                 content_type="application/json")
+        self.assertEqual(response.status_code, 201)
+        expected_json = {
+            "message": "Success",
+            "user": {
+                "name": "bob",
+                "email": "bob@email.com",
+                "id": 1
+            }
+        }
+        self.assertEqual(response.get_json(), expected_json)
