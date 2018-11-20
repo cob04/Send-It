@@ -1,6 +1,6 @@
 import psycopg2
 
-url = "dbname='sendit-tests' host='localhost' port='5432' user='eric' password='hardpassword'"
+url = "dbname='sendit' host='localhost' port='5432' user='eric' password='hardpassword'"
 
 
 def connection(url):
@@ -58,7 +58,8 @@ def create_table_queries():
         sender character varying(50) NOT NULL,
         pickup character varying(50) NOT NULL,
         destination character varying(50) NOT NULL,
-        weight numeric NOT NULL)"""
+        weight numeric NOT NULL,
+        status character varying(50j)')"""
 
     users = """CREATE TABLE IF NOT EXISTS users (
         user_id serial PRIMARY KEY NOT NULL,

@@ -26,8 +26,10 @@ class ParcelOrderList(Resource):
 
         parcel = ParcelOrderModel(**args)
         parcel_order = self.order_manager.save(parcel)
-        payload = {"message": "Success",
-                   "parcel_order": parcel_order.to_dict()}
+        payload = {
+            "message": "Success",
+            "parcel_order": parcel.to_dict()
+        }
         return payload, 201
 
     def get(self):
