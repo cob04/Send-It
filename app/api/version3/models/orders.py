@@ -21,6 +21,19 @@ class ParcelOrderModel:
                                                  self.destination,
                                                  self.weight)
 
+    def to_dict(self):
+        """Return a parce in a dictionary format."""
+        parcel_dict = {
+            "sender": self.sender,
+            "recipient": self.recipient,
+            "pickup": self.pickup,
+            "destination": self.destination,
+            "weight": float(self.weight),
+        }
+        if self.id:
+            parcel_dict["id"] = self.id
+        return parcel_dict
+
 
 class ParcelOrderManager:
 

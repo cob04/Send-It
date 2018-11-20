@@ -24,6 +24,17 @@ class ParcelOrderModelTests(TestCase):
         self.assertEqual(repr(parcel),
                          "Parcel(bob, linda, home, restaurant, 2Kg)")
 
+    def test_parcel_in_dictionary_format(self):
+        parcel = ParcelOrderModel("bob", "linda", "home", "restaurant", 2)
+        parcel_dict = {
+            "sender": "bob",
+            "recipient": "linda",
+            "pickup": "home",
+            "destination": "restaurant",
+            "weight": 2.0
+        }
+        self.assertEqual(parcel.to_dict(), parcel_dict)
+
 
 class ParcelOrderManagerTests(TestCase):
 
