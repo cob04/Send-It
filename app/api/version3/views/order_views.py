@@ -56,7 +56,7 @@ class ParcelOrderList(Resource):
                 "recipient": parcel.recipient,
                 "pickup": parcel.pickup,
                 "destination": parcel.destination,
-                "weight": floate(parcel.weght)
+                "weight": float(parcel.weight)
              }
              orders.append(order)
 
