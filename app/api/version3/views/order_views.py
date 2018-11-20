@@ -1,7 +1,4 @@
 # views.py
-import json
-
-from flask import jsonify, make_response
 from flask_restful import reqparse, Resource
 
 from ..models.orders import ParcelOrderModel, ParcelOrderManager
@@ -36,32 +33,18 @@ class ParcelOrderList(Resource):
         parcel = ParcelOrderModel(sender, recipient, pickup, destination,
                                   weight)
         parcel_order = self.order_manager.save(parcel)
-        parcel_order = {
-            "sender": parcel_order.sender,
-            "recipient": parcel_order.recipient,
-            "pickup": parcel_order.pickup,
-            "destination": parcel_order.destination,
-            "weight": parcel_order.weight
-        }
         payload = {"message": "Success",
-                   "parcel_order": parcel_order}
-        return make_response(jsonify(payload), 201)
+                   "parcel_order": parcel_order.to_dict()}
+        return payload, 201
 
     def get(self):
         parcel_objects = self.order_manager.fetch_all()
         orders = []
         for parcel in parcel_objects:
-             order = {
-                "sender": parcel.sender,
-                "recipient": parcel.recipient,
-                "pickup": parcel.pickup,
-                "destination": parcel.destination,
-                "weight": float(parcel.weight)
-             }
-             orders.append(order)
+            orders.append(parcel.to_dict())
 
         payload = {
             "message": "Success",
             "parcel_orders": orders
         }
-        return make_response(jsonify(payload), 200)
+        return payload, 200
