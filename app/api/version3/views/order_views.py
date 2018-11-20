@@ -24,14 +24,7 @@ class ParcelOrderList(Resource):
 
         args = parser.parse_args()
 
-        sender = args["sender"]
-        recipient = args["recipient"]
-        pickup = args["pickup"]
-        destination = args["destination"]
-        weight = args["weight"]
-
-        parcel = ParcelOrderModel(sender, recipient, pickup, destination,
-                                  weight)
+        parcel = ParcelOrderModel(**args)
         parcel_order = self.order_manager.save(parcel)
         payload = {"message": "Success",
                    "parcel_order": parcel_order.to_dict()}
