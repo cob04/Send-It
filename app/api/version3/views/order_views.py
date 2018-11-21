@@ -92,10 +92,30 @@ class ParcelUpdateDestination(Resource):
     def put(self, parcel_id):
         parser = reqparse.RequestParser()
         parser.add_argument('destination', type=str, required=True,
-                            help="Order must have a destination")
+                            help="Parcel must have a destination")
         args = parser.parse_args()
         destination = args["destination"]
         parcel = self.order_manager.update_destination(parcel_id, destination)
+        payload = {
+            "message": "Success",
+            "parcel_order": parcel.to_dict()
+        }
+        return payload, 201
+
+
+class ParcelUpdateStatus(Resource):
+    """Resource to change a pardel status."""
+    def __init__(self):
+        self.manager = ParcelOrderManager()
+
+    @jwt_required
+    def put(self, parcel_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('status', type=str, required=True,
+                            help="A status is required")
+        args = parser.parse_args()
+        status = args["status"]
+        parcel = self.manager.update_status(parcel_id, status)
         payload = {
             "message": "Success",
             "parcel_order": parcel.to_dict()
