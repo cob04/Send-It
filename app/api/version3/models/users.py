@@ -1,5 +1,7 @@
 import psycopg2
 
+from werkzeug.security import  generate_password_hash, check_password_hash
+
 from app.db_config import init_db
 
 
@@ -14,7 +16,7 @@ class UserModel:
         self.id = user_id
         self.name = name
         self.email = email
-        self._password = password
+        self._password = generate_password_hash(password)
         if not role:
             self.role = NORMAL
         else:
@@ -22,6 +24,10 @@ class UserModel:
 
     def __repr__(self):
         return "User(%s, %s, %s,)" % (self.name, self.email, self.role)
+
+    def check_password(self, password):
+        """Check if provided password is correct."""
+        return check_password_hash(self._password, password)
 
     def to_dict(self):
         """Return a parce in a dictionary format."""
