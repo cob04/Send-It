@@ -10,7 +10,8 @@ CANCELLED = "Parcel cancelled"
 
 
 class ParcelOrderModel:
-
+    """Object to store parcel data for easy retrival.
+    """
     def __init__(self, user_id, sender, recipient, pickup, destination, weight,
                  parcel_id=None, status=None):
         self.id = parcel_id
@@ -53,7 +54,9 @@ class ParcelOrderModel:
 
 
 class ParcelOrderManager:
-
+    """Object to abstract away database interations.
+    Does insertions, retrivals and data manipulation.
+    """
     def __init__(self):
         self.db = init_db()
 
