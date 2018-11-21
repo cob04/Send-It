@@ -1,5 +1,6 @@
 # views.py
 from flask_restful import reqparse, Resource
+from flask_jwt_extended import jwt_required 
 
 from ..models.orders import ParcelOrderModel, ParcelOrderManager
 
@@ -10,6 +11,7 @@ class ParcelOrderList(Resource):
     def __init__(self):
         self.order_manager = ParcelOrderManager()
 
+    @jwt_required
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=str, required=True,
@@ -35,6 +37,7 @@ class ParcelOrderList(Resource):
         }
         return payload, 201
 
+    @jwt_required
     def get(self):
         parcel_objects = self.order_manager.fetch_all()
         orders = [parcel.to_dict() for parcel in parcel_objects]
@@ -50,6 +53,7 @@ class ParcelOrder(Resource):
     def __init__(self):
         self.order_manager = ParcelOrderManager()
 
+    @jwt_required
     def get(self, parcel_id):
         parcel = self.order_manager.fetch_by_id(parcel_id)
         if parcel:
@@ -69,6 +73,7 @@ class UserParcelOrderCancel(Resource):
     def __init__(self):
         self.order_manager = ParcelOrderManager()
 
+    @jwt_required
     def put(self, parcel_id):
         parcel = self.order_manager.cancel_by_id(parcel_id)
         payload = {
@@ -83,6 +88,7 @@ class ParcelUpdateDestination(Resource):
     def __init__(self):
         self.order_manager = ParcelOrderManager()
 
+    @jwt_required
     def put(self, parcel_id):
         parser = reqparse.RequestParser()
         parser.add_argument('destination', type=str, required=True,
