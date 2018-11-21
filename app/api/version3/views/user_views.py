@@ -5,8 +5,10 @@ from flask_jwt_extended import create_access_token
 from ..models.users import UserModel, UserManager
 
 
-class UserList(Resource):
-
+class UserSignup(Resource):
+    """Resource that provides sigb endpoint for user
+    account creation.
+    """
     def __init__(self):
         self.manager = UserManager()
 
@@ -30,29 +32,8 @@ class UserList(Resource):
         return payload, 201
 
 
-class UserSignup(Resource):
-
-    def __init__(self):
-        self.manager = UserManager()
-
-    def get(self, user_id):
-        user = self.manager.fetch_by_id(user_id)
-        if user:
-            payload = {
-                "message": "Success",
-                "user": user.to_dict()
-            }
-            return payload, 200
-        else:
-            payload = {
-                "message": "Sorry, we cannot find such a user",
-                "error": "Not found"
-            }
-            return payload, 404
-
-
 class UserLogin(Resource):
-
+    """Resource that provides endpoint to login users."""
     def __init__(self):
         self.manager = UserManager()
 
