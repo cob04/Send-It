@@ -17,3 +17,4 @@ api.add_resource(orders.UserParcelOrderCancel,
                  strict_slashes=False)
 
 api.add_resource(users.UserList, '/auth/signup', strict_slashes=False)
+api.add_resource(users.UserLogin, '/auth/login', strict_slashes=False)

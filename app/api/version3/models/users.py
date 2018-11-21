@@ -16,7 +16,7 @@ class UserModel:
         self.id = user_id
         self.name = name
         self.email = email
-        self._password = generate_password_hash(password)
+        self._password = password 
         if not role:
             self.role = NORMAL
         else:
@@ -24,10 +24,6 @@ class UserModel:
 
     def __repr__(self):
         return "User(%s, %s, %s,)" % (self.name, self.email, self.role)
-
-    def check_password(self, password):
-        """Check if provided password is correct."""
-        return check_password_hash(self._password, password)
 
     def to_dict(self):
         """Return a parce in a dictionary format."""
@@ -49,7 +45,8 @@ class UserManager:
     def save(self, user):
         """Insert user order data to the database."""
         query = """ INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"""
-        new_record = (user.name, user.email, user._password)
+        password_hash = generate_password_hash(user._password)
+        new_record = (user.name, user.email, password_hash)
         try:
             with self.db:
                 with self.db.cursor() as cursor:
@@ -62,7 +59,7 @@ class UserManager:
 
     def fetch_by_id(self, user_id):
         """Fetch one user by their id."""
-        query = """ SELECT * FROM users WHERE user_id = % s"""
+        query = """ SELECT * FROM users WHERE user_id = %s"""
         try:
             with self.db:
                 with self.db.cursor() as cursor:
@@ -73,3 +70,24 @@ class UserManager:
 
         except (Exception, psycopg2.DatabaseError) as error:
             return "Error fetching user", error
+
+    def authenticate(self, email, password):
+        """Verify email and password."""
+        query = """SELECT * FROM users WHERE email = '{}'""".format(email)
+        try:
+            with self.db:
+                with self.db.cursor() as cursor:
+                    cursor.execute(query)
+                    result = cursor.fetchone()
+                    if result:
+                        user_id, *fields = result
+                        user = UserModel(*fields, user_id)
+                        if check_password_hash(user._password, password):
+                            return True, user
+                        else:
+                            return False, "Incorrect password"
+                    else:
+                        return False, "User not found"
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            return False, error
