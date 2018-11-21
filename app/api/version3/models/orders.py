@@ -133,3 +133,22 @@ class ParcelOrderManager:
 
         except (Exception, psycopg2.DatabaseError) as error:
             return "Error updating parcel", error
+
+    def update_destination(self, parcel_id, destination):
+        """Change the parcels destination."""
+        select_parcel_query = """ SELECT * FROM parcels WHERE parcel_id = %s;"""
+        update_parcel_query = """UPDATE parcels SET destination = %s WHERE parcel_id = %s;"""
+        try:
+            with self.db:
+                with self.db.cursor() as cursor:
+                    cursor.execute(update_parcel_query, (destination, parcel_id))
+                    self.db.commit()
+                    cursor.execute(select_parcel_query, (parcel_id,))
+                    parcel_id, *fields, status = cursor.fetchone()
+                    parcel = ParcelOrderModel(*fields,
+                                              parcel_id=parcel_id,
+                                              status=status)
+                    return parcel
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            return "Error updating parcel", error
