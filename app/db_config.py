@@ -1,6 +1,6 @@
 import psycopg2
 
-url = "dbname='sendit-tests' host='localhost' port='5432' user='eric' password='hardpassword'"
+url = "dbname='sendit' host='localhost' port='5432' user='eric' password='hardpassword'"
 
 
 def connection(url):
@@ -54,11 +54,13 @@ def destroy_tables(*tables):
 def create_table_queries():
     parcels = """CREATE TABLE IF NOT EXISTS parcels (
         parcel_id serial PRIMARY KEY NOT NULL,
-        recipient character varying(50) NOT NULL,
+        user_id int NOT NULL,
         sender character varying(50) NOT NULL,
+        recipient character varying(50) NOT NULL,
         pickup character varying(50) NOT NULL,
         destination character varying(50) NOT NULL,
-        weight numeric NOT NULL)"""
+        weight numeric NOT NULL,
+        status character varying(50))"""
 
     users = """CREATE TABLE IF NOT EXISTS users (
         user_id serial PRIMARY KEY NOT NULL,
