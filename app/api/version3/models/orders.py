@@ -11,9 +11,10 @@ CANCELLED = "Parcel cancelled"
 
 class ParcelOrderModel:
 
-    def __init__(self, sender, recipient, pickup, destination, weight,
+    def __init__(self, user_id, sender, recipient, pickup, destination, weight,
                  parcel_id=None, status=None):
         self.id = parcel_id
+        self.user_id = user_id
         self.sender = sender
         self.recipient = recipient
         self.pickup = pickup
@@ -31,6 +32,7 @@ class ParcelOrderModel:
     def to_dict(self):
         """Return a parce in a dictionary format."""
         parcel_dict = {
+            "user_id": self.user_id,
             "sender": self.sender,
             "recipient": self.recipient,
             "pickup": self.pickup,
@@ -54,10 +56,10 @@ class ParcelOrderManager:
 
     def save(self, parcel):
         """Insert parcel order data to the database."""
-        query = """ INSERT INTO parcels (sender, recipient, pickup, destination,
-                weight) VALUES (%s, %s, %s, %s, %s)"""
-        new_record = (parcel.sender, parcel.recipient, parcel.pickup,
-                      parcel.destination, parcel.weight)
+        query = """ INSERT INTO parcels (user_id, sender, recipient, pickup, destination,
+                weight) VALUES (%s, %s, %s, %s, %s, %s)"""
+        new_record = (parcel.user_id, parcel.sender, parcel.recipient,
+                      parcel.pickup, parcel.destination, parcel.weight)
         try:
             cursor = self.db.cursor()
             cursor.execute(query, new_record)
