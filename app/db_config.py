@@ -65,8 +65,9 @@ def create_table_queries():
     users = """CREATE TABLE IF NOT EXISTS users (
         user_id serial PRIMARY KEY NOT NULL,
         name character varying(50) NOT NULL,
-        email character varying(50) NOT NULL,
-        password character varying(500) NOT NULL)"""
+        email character varying(50) UNIQUE NOT NULL,
+        password character varying(500) NOT NULL,
+        role character varying(20))"""
 
     queries = [parcels, users]
     return queries
