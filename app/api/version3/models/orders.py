@@ -20,7 +20,10 @@ class ParcelOrderModel:
         self.pickup = pickup
         self.destination = destination
         self.weight = weight
-        self.status = NOT_DELIVERED
+        if not status:
+            self.status = NOT_DELIVERED
+        else:
+            self.status = status
 
     def __repr__(self):
         return "Parcel(%s, %s, %s, %s, %sKg)" % (self.sender,
@@ -111,8 +114,8 @@ class ParcelOrderManager:
 
     def cancel_by_id(self, parcel_id):
         """Cancel the parcel of the id provided."""
-        select_parcel_query = """ SELECT * FROM parcels where parcel_id = %s"""
-        update_parcel_query = """Update parcels set status = %s  where parcel_id = %s"""
+        select_parcel_query = """ SELECT * FROM parcels WHERE parcel_id = %s;"""
+        update_parcel_query = """UPDATE parcels SET status = %s  WHERE parcel_id = %s;"""
         try:
             with self.db:
                 with self.db.cursor() as cursor:
