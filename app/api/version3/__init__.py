@@ -15,6 +15,9 @@ api.add_resource(orders.ParcelOrder, '/parcels/<parcel_id>',
 api.add_resource(orders.UserParcelOrderCancel,
                  '/parcels/<int:parcel_id>/cancel',
                  strict_slashes=False)
+api.add_resource(orders.ParcelUpdateDestination,
+                 '/parcels/<int:parcel_id>/destination',
+                 strict_slashes=False)
 
 api.add_resource(users.UserList, '/auth/signup', strict_slashes=False)
 api.add_resource(users.UserLogin, '/auth/login', strict_slashes=False)

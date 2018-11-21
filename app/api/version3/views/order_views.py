@@ -76,3 +76,22 @@ class UserParcelOrderCancel(Resource):
             "parcel_order": parcel.to_dict()
         }
         return payload, 201
+
+
+class ParcelUpdateDestination(Resource):
+    """Resource to change a parcel's destination."""
+    def __init__(self):
+        self.order_manager = ParcelOrderManager()
+
+    def put(self, parcel_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('destination', type=str, required=True,
+                            help="Order must have a destination")
+        args = parser.parse_args()
+        destination = args["destination"]
+        parcel = self.order_manager.update_destination(parcel_id, destination)
+        payload = {
+            "message": "Success",
+            "parcel_order": parcel.to_dict()
+        }
+        return payload, 201
