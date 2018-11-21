@@ -48,6 +48,7 @@ class UserSignup(Resource):
                 "message": "Sorry, we cannot find such a user",
                 "error": "Not found"
             }
+            return payload, 404
 
 
 class UserLogin(Resource):

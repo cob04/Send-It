@@ -5,7 +5,8 @@ from ..models.orders import ParcelOrderModel, ParcelOrderManager
 
 
 class ParcelOrderList(Resource):
-
+    """Resource for adding a new parcel and retrieving all parcels.
+    """
     def __init__(self):
         self.order_manager = ParcelOrderManager()
 
@@ -45,7 +46,7 @@ class ParcelOrderList(Resource):
 
 
 class ParcelOrder(Resource):
-
+    """Resource for a getting a single parcel."""
     def __init__(self):
         self.order_manager = ParcelOrderManager()
 
@@ -64,7 +65,7 @@ class ParcelOrder(Resource):
             }
 
 class UserParcelOrderCancel(Resource):
-
+    """Resource to cancel a parcel."""
     def __init__(self):
         self.order_manager = ParcelOrderManager()
 

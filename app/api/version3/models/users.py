@@ -10,7 +10,9 @@ NORMAL = "Normal"
 
 
 class UserModel:
-
+    """Object to store user data.
+    This makes it easy to manipulate.
+    """
     def __init__(self, name, email, password, user_id=None, role=None):
 
         self.id = user_id
@@ -38,7 +40,9 @@ class UserModel:
 
 
 class UserManager:
-
+    """Object to abstract away the database.
+    Handles inserting and retriving data from the database.
+    """
     def __init__(self):
         self.db = init_db()
 
