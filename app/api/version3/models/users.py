@@ -4,6 +4,7 @@ from werkzeug.security import  generate_password_hash, check_password_hash
 
 from app.db_config import init_db
 
+from ..exceptions import IncorrectPasswordError, UserNotFoundError, ApplicationError
 
 ADMIN = "Administrator"
 NORMAL = "Normal"
@@ -68,12 +69,16 @@ class UserManager:
             with self.db:
                 with self.db.cursor() as cursor:
                     cursor.execute(query, (user_id,))
-                    user_id, *fields = cursor.fetchone()
-                    user = UserModel(*fields, user_id)
-                    return user
+                    result = cursor.fetchone()
+                    if result:
+                        user_id, *fields = result
+                        user = UserModel(*fields, user_id)
+                        return user
+                    else:
+                        raise UserNotFoundError
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            return "Error fetching user", error
+        except psycopg2.Error:
+            raise ApplicationError
 
     def authenticate(self, email, password):
         """Verify email and password."""
@@ -87,11 +92,11 @@ class UserManager:
                         user_id, *fields = result
                         user = UserModel(*fields, user_id)
                         if check_password_hash(user._password, password):
-                            return True, user
+                            return user
                         else:
-                            return False, "Incorrect password"
+                            raise IncorrectPasswordError
                     else:
-                        return False, "User not found"
+                        raise UserNotFoundError
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            return False, error
+        except psycopg2.Error:
+            raise ApplicationError
