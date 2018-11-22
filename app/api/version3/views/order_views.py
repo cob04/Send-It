@@ -2,6 +2,7 @@
 from flask_restful import reqparse, Resource
 from flask_jwt_extended import jwt_required 
 
+from ..exceptions import ParcelNotFoundError, ApplicationError
 from ..models.orders import ParcelOrderModel, ParcelOrderManager
 
 
@@ -55,17 +56,22 @@ class ParcelOrder(Resource):
 
     @jwt_required
     def get(self, parcel_id):
-        parcel = self.order_manager.fetch_by_id(parcel_id)
-        if parcel:
+        try:
+            parcel = self.order_manager.fetch_by_id(parcel_id)
             payload = {
                 "message": "Success",
                 "parcel_order": parcel.to_dict()
             }
             return payload, 200
-        else:
+        except ParcelNotFoundError:
             payload = {
                 "message": "Sorry, we cannot find such a parcel",
-                "error": "Not found"
+                "error": "Parcel not found"
+            }
+        except ApplicationError:
+            payload = {
+                "message": "Sorry, sonething went wrong",
+                "error": "Application error"
             }
 
 class UserParcelOrderCancel(Resource):
@@ -75,12 +81,25 @@ class UserParcelOrderCancel(Resource):
 
     @jwt_required
     def put(self, parcel_id):
-        parcel = self.order_manager.cancel_by_id(parcel_id)
-        payload = {
-            "message": "Success",
-            "parcel_order": parcel.to_dict()
-        }
-        return payload, 201
+        try:
+            parcel = self.order_manager.cancel_by_id(parcel_id)
+            payload = {
+                "message": "Success",
+                "parcel_order": parcel.to_dict()
+            }
+            return payload, 201
+        except ParcelNotFoundError:
+            payload = {
+                "message": "Sorry,  we cannnot find such a parcel",
+                "error": "Parcel not found"
+            }
+
+        except ApplicationError:
+            payload = {
+                "message": "Sorry, something went wrong",
+                "error": "Application error"
+            }
+            return payload, 500
 
 
 class ParcelUpdateDestination(Resource):
@@ -95,12 +114,27 @@ class ParcelUpdateDestination(Resource):
                             help="Parcel must have a destination")
         args = parser.parse_args()
         destination = args["destination"]
-        parcel = self.order_manager.update_destination(parcel_id, destination)
-        payload = {
-            "message": "Success",
-            "parcel_order": parcel.to_dict()
-        }
-        return payload, 201
+        try:
+            parcel = self.order_manager.update_destination(parcel_id, destination)
+            payload = {
+                "message": "Success",
+                "parcel_order": parcel.to_dict()
+            }
+            return payload, 201
+
+        except ParcelNotFoundError:
+            payload = {
+                "message": "Sorry, we cannot find such a parcel",
+                "error": "Parcel not found",
+            }
+            return payload, 404
+
+        except ApplicationError:
+            payload = {
+                "message": "Sorry, something went wrong",
+                "error": "Application error"
+            }
+            return payload, 500
 
 
 class ParcelUpdateStatus(Resource):
@@ -115,12 +149,28 @@ class ParcelUpdateStatus(Resource):
                             help="A status is required")
         args = parser.parse_args()
         status = args["status"]
-        parcel = self.manager.update_status(parcel_id, status)
-        payload = {
-            "message": "Success",
-            "parcel_order": parcel.to_dict()
-        }
-        return payload, 201
+        try:
+            parcel = self.manager.update_status(parcel_id, status)
+            payload = {
+                "message": "Success",
+                "parcel_order": parcel.to_dict()
+            }
+            return payload, 201
+
+        except ParcelNotFoundError:
+            payload = {
+                "message": "Sorry, we cannot find such a parcel",
+                "error": "Parcel not found",
+            }
+            return payload, 404
+
+        except ApplicationError:
+            payload = {
+                "message": "Sorry, something went wrong",
+                "error": "Application error"
+            }
+            return payload, 500
+
 
 class ParcelUpdatePresentLocation(Resource):
     """Resource to change a pardel present location."""
@@ -134,9 +184,24 @@ class ParcelUpdatePresentLocation(Resource):
                             help="A location is required")
         args = parser.parse_args()
         new_location = args["new_location"]
-        parcel = self.manager.update_present_location(parcel_id, new_location)
-        payload = {
-            "message": "Success",
-            "parcel_order": parcel.to_dict()
-        }
-        return payload, 201
+        try:
+            parcel = self.manager.update_present_location(parcel_id, new_location)
+            payload = {
+                "message": "Success",
+                "parcel_order": parcel.to_dict()
+            }
+            return payload, 201
+
+        except ParcelNotFoundError:
+            payload = {
+                "message": "Sorry, we cannot find such a parcel",
+                "error": "Parcel not found",
+            }
+            return payload, 404
+
+        except ApplicationError:
+            payload = {
+                "message": "Sorry, something went wrong",
+                "error": "Application error"
+            }
+            return payload, 500

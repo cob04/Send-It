@@ -54,7 +54,7 @@ class UserLogin(Resource):
             access_token = create_access_token(identity=user.id)
             payload = {
                 "message": "Success",
-                "user": content.to_dict(),
+                "user": user.to_dict(),
                 "access_token": access_token
             }
             return payload, 200
