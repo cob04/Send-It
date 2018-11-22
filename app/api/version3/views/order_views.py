@@ -149,6 +149,15 @@ class ParcelUpdateStatus(Resource):
 
     @jwt_required
     def put(self, parcel_id):
+        user_id = get_jwt_identity()
+        manager = UserManager()
+        user = manager.fetch_by_id(user_id)
+        print(">>>>>>   ", user.to_dict())
+        if user.role != ADMIN:
+            payload = {
+                "message": "Unauthorized",
+            }
+            return payload, 403
         parser = reqparse.RequestParser()
         parser.add_argument('status', type=str, required=True,
                             help="A status is required")
@@ -187,19 +196,19 @@ class ParcelUpdatePresentLocation(Resource):
         user_id = get_jwt_identity()
         manager = UserManager()
         user = manager.fetch_by_id(user_id)
-        if not user.role == ADMIN:
+        if user.role != ADMIN:
             payload = {
                 "message": "Unauthorized",
             }
             return payload, 403
 
         parser = reqparse.RequestParser()
-        parser.add_argument('new_location', type=str, required=True,
+        parser.add_argument('present_location', type=str, required=True,
                             help="A location is required")
         args = parser.parse_args()
-        new_location = args["new_location"]
+        present_location = args["present_location"]
         try:
-            parcel = self.manager.update_present_location(parcel_id, new_location)
+            parcel = self.manager.update_present_location(parcel_id, present_location)
             payload = {
                 "message": "Success",
                 "parcel_order": parcel.to_dict()

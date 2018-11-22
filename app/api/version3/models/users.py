@@ -21,10 +21,10 @@ class UserModel:
         self.name = name
         self.email = email
         self._password = password 
-        if not role:
-            self.role = NORMAL
-        else:
+        if role:
             self.role = role
+        else:
+            self.role = NORMAL
 
     def __repr__(self):
         return "User(%s, %s, %s,)" % (self.name, self.email, self.role)
@@ -50,9 +50,9 @@ class UserManager:
 
     def save(self, user):
         """Insert user order data to the database."""
-        query = """ INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"""
+        query = """ INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)"""
         password_hash = generate_password_hash(user._password)
-        new_record = (user.name, user.email, password_hash)
+        new_record = (user.name, user.email, password_hash, user.role)
         try:
             with self.db:
                 with self.db.cursor() as cursor:
@@ -63,7 +63,8 @@ class UserManager:
         except psycopg2.IntegrityError:
             raise EmailNotUniqueError
 
-        except psycopg2.Error:
+        except psycopg2.Error as e:
+            print("<<<<< ", e)
             raise ApplicationError
 
     def fetch_by_id(self, user_id):
@@ -75,8 +76,8 @@ class UserManager:
                     cursor.execute(query, (user_id,))
                     result = cursor.fetchone()
                     if result:
-                        user_id, *fields = result
-                        user = UserModel(*fields, user_id)
+                        user_id, *fields, role = result
+                        user = UserModel(*fields, user_id=user_id, role=role)
                         return user
                     else:
                         raise UserNotFoundError

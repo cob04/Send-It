@@ -22,7 +22,8 @@ class UserSignup(Resource):
                             help="User must have a email")
         parser.add_argument('password', type=str, required=True,
                             help="User must have a password")
-
+        parser.add_argument("role", type=str, required=False,
+                            help="User role Normal or Administrator")
         args = parser.parse_args()
 
         user = UserModel(**args)
