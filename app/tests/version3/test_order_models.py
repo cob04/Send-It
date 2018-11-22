@@ -12,7 +12,7 @@ url = "dbname='sendit' host='localhost' port='5432' user='eric' 'password='hardp
 class ParcelOrderModelTests(TestCase):
 
     def test_initializing_a_parcel(self):
-        parcel = ParcelOrderModel("bob", "linda", "home", "restaurant", 2)
+        parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
         self.assertEqual(parcel.sender, "bob")
         self.assertEqual(parcel.recipient, "linda")
         self.assertEqual(parcel.pickup, "home")
@@ -20,18 +20,21 @@ class ParcelOrderModelTests(TestCase):
         self.assertEqual(parcel.weight, 2)
 
     def test_parcel_object_presentation(self):
-        parcel = ParcelOrderModel("bob", "linda", "home", "restaurant", 2)
+        parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
         self.assertEqual(repr(parcel),
                          "Parcel(bob, linda, home, restaurant, 2Kg)")
 
     def test_parcel_in_dictionary_format(self):
-        parcel = ParcelOrderModel("bob", "linda", "home", "restaurant", 2)
+        parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
         parcel_dict = {
+            "user_id": 1,
             "sender": "bob",
             "recipient": "linda",
             "pickup": "home",
             "destination": "restaurant",
-            "weight": 2.0
+            "present_location": "home",
+            "weight": 2.0,
+            "status": "Parcel not delivered"
         }
         self.assertEqual(parcel.to_dict(), parcel_dict)
 
@@ -43,16 +46,16 @@ class ParcelOrderManagerTests(TestCase):
 
     def tearDown(self):
         destroy_tables("parcels")
-
+    
     def test_inserting_parcels_into_database(self):
         manager = ParcelOrderManager()
-        parcel = ParcelOrderModel("bob", "linda", "home", "restaurant", 2)
+        parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
         info = manager.save(parcel)
-        self.assertEqual(info, "Successfully inserted new parcel")
+        self.assertEqual(info, parcel)
 
     def test_fetching_all_parcesls_from_the_db(self):
-        parcel1 = ParcelOrderModel("bob", "linda", "home", "restaurant", 2)
-        parcel2 = ParcelOrderModel("gin", "louiz", "home", "restaurant", 2)
+        parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
+        parcel2 = ParcelOrderModel(1, "gin", "louiz", "home", "restaurant", 2)
         manager = ParcelOrderManager()
         manager.save(parcel1)
         manager.save(parcel2)

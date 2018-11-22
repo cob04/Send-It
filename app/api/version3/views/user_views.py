@@ -2,6 +2,8 @@
 from flask_restful import reqparse, Resource
 from flask_jwt_extended import create_access_token
 
+from ..exceptions import (UserNotFoundError, ApplicationError,
+                          IncorrectPasswordError, EmailNotUniqueError)
 from ..models.users import UserModel, UserManager
 
 
@@ -24,12 +26,20 @@ class UserSignup(Resource):
         args = parser.parse_args()
 
         user = UserModel(**args)
-        self.manager.save(user)
-        payload = {
-            "message": "Success",
-            "user": user.to_dict()
-        }
-        return payload, 201
+        try:
+            self.manager.save(user)
+            payload = {
+                "message": "Success",
+                "user": user.to_dict()
+            }
+            return payload, 201
+
+        except EmailNotUniqueError:
+            payload = {
+                "messsage": "Sorry, your email is already taken",
+                "eror": "Email not unique"
+            }
+            return payload, 400
 
 
 class UserLogin(Resource):
@@ -46,18 +56,29 @@ class UserLogin(Resource):
 
         args = parser.parse_args()
         email, password = args['email'], args["password"]
-        status, content = self.manager.authenticate(email, password)
-        if status:
-            access_token = create_access_token(identity=email)
+        try:
+            user = self.manager.authenticate(email, password)
+            access_token = create_access_token(identity=user.id)
             payload = {
                 "message": "Success",
-                "user": content.to_dict(),
+                "user": user.to_dict(),
                 "access_token": access_token
             }
             return payload, 200
-        else:
+        except UserNotFoundError:
             payload = {
-                "message": "We were unable to log you in",
-                "error": str(content),
+                "message": "Sorry, we cannot find such a user",
+                "error": "User not found"
             }
             return payload, 404
+        except IncorrectPasswordError:
+            payload = {
+                "message": "Sorry, your password is incorrect",
+                "error": "Incorrect password"
+            }
+            return payload, 400
+        except ApplicationError:
+            payload = {
+                "message": "Sorry, something went wrong. we are fixing it"
+            }
+            return payload, 500
