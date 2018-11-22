@@ -1,54 +1,43 @@
 import psycopg2
+from flask import current_app
 
-url = "dbname='sendit' host='localhost' port='5432' user='eric' password='hardpassword'"
-
-
-def connection(url):
+# url = "dbname='sendit' host='localhost' port='5432' user='eric' password='hardpassword'"
+ 
+def connection():
+    url = current_app.config["DATABASE_URL"]
     conn = psycopg2.connect(url)
     return conn
 
 
 def init_db():
-    return connection(url)
+    return connection()
 
 
 def create_tables():
     try:
-        conn = connection(url)
-        cursor = conn.cursor()
-        queries = create_table_queries()
+        with connection() as conn:
+            with conn.cursor() as cursor:
+                queries = create_table_queries()
 
-        for query in queries:
-            cursor.execute(query)
-        conn.commit()
-        print("Tables created successfully in PostgreSQL")
+                for query in queries:
+                    cursor.execute(query)
+                    conn.commit()
+                print("Tables created successfully in PostgreSQL")
 
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error while creating PostgreSQL tables", error)
 
-    finally:
-        if(conn):
-            cursor.close()
-            conn.close()
-            print("PostgreSQL connection is closed")
 
-
-def destroy_tables(*tables):
+def destroy_tables(table):
     try:
-        conn = connection(url)
-        cursor = conn.cursor()
-        drop_query = "DROP TABLE IF EXISTS %s CASCADE"
-        for table in tables:
-            query = drop_query % table
-            cursor.execute(query)
-        conn.commit()
+        with connection() as conn:
+            with conn.cursor() as cursor:
+                drop_query = """DROP TABLE IF EXISTS %s CASCADE"""
+                print(">>>>> %s <<<<<<" % table)
+                cursor.execute(query, (table,))
+
     except (Exception, psycopg2.DatabaseError) as error:
         return "Error while destroying PostgresSQL tables", error
-
-    finally:
-        if(conn):
-            cursor.close()
-            conn.close()
 
 
 def create_table_queries():

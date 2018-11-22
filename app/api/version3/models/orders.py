@@ -81,9 +81,9 @@ class ParcelOrderManager:
                     self.db.commit()
                     return parcel
 
-        except psycopg2.Error:
-            raise ApplicationError
-
+        except psycopg2.Error as e:
+            return e
+    
 
     def fetch_all(self):
         """Fetch all parcels."""
@@ -102,8 +102,8 @@ class ParcelOrderManager:
                                              present_location=p_location))
                     return data
 
-        except psycopg2.Error:
-            raise ApplicationError
+        except psycopg2.Error as e:
+            return e
     
     def fetch_all_user_parcels(self, user_id):
         """Fetch all parcels."""
