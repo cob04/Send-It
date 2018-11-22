@@ -81,7 +81,7 @@ class UserManager:
                     else:
                         raise UserNotFoundError
 
-        except IntegrityError:
+        except psycopg2.IntegrityError:
             raise EmailNotUniqueError
 
         except psycopg2.Error:

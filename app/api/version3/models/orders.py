@@ -104,6 +104,26 @@ class ParcelOrderManager:
 
         except psycopg2.Error:
             raise ApplicationError
+    
+    def fetch_all_user_parcels(self, user_id):
+        """Fetch all parcels."""
+        query = """ SELECT * FROM parcels WHERE user_id = %s"""
+        try:
+            with self.db:
+                with self.db.cursor() as cursor:
+                    cursor.execute(query, (user_id,))
+                    all_parcels = cursor.fetchall()
+                    data = []
+                    for row in all_parcels:
+                        parcel_id, *other_fields, status, p_location = row
+                        data.append(ParcelOrderModel(*other_fields,
+                                             parcel_id=parcel_id,
+                                             status=status,
+                                             present_location=p_location))
+                    return data
+
+        except psycopg2.Error:
+            raise ApplicationError
 
 
     def fetch_by_id(self, parcel_id):

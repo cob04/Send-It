@@ -1,9 +1,10 @@
 # views.py
 from flask_restful import reqparse, Resource
-from flask_jwt_extended import jwt_required 
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from ..exceptions import ParcelNotFoundError, ApplicationError
 from ..models.orders import ParcelOrderModel, ParcelOrderManager
+from ..models.users import ADMIN, NORMAL, UserManager
 
 
 class ParcelOrderList(Resource):
@@ -40,7 +41,13 @@ class ParcelOrderList(Resource):
 
     @jwt_required
     def get(self):
+        #user_id = get_jwt_identity()
+        #manager = UserManager()
+        #user = manager.fetch_by_id(user_id)
+        #if user.role == ADMIN:
         parcel_objects = self.order_manager.fetch_all()
+        #else:
+        #    parcel_objects = self.order_manager.fetch_all_user_parcels(user_id) 
         orders = [parcel.to_dict() for parcel in parcel_objects]
         payload = {
             "message": "Success",
