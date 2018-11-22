@@ -184,6 +184,15 @@ class ParcelUpdatePresentLocation(Resource):
 
     @jwt_required
     def put(self, parcel_id):
+        user_id = get_jwt_identity()
+        manager = UserManager()
+        user = manager.fetch_by_id(user_id)
+        if not user.role == ADMIN:
+            payload = {
+                "message": "Unauthorized",
+            }
+            return payload, 403
+
         parser = reqparse.RequestParser()
         parser.add_argument('new_location', type=str, required=True,
                             help="A location is required")
