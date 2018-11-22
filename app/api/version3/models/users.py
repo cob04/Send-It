@@ -4,7 +4,8 @@ from werkzeug.security import  generate_password_hash, check_password_hash
 
 from app.db_config import init_db
 
-from ..exceptions import IncorrectPasswordError, UserNotFoundError, ApplicationError
+from ..exceptions import (IncorrectPasswordError, UserNotFoundError,
+                          ApplicationError, EmailNotUniqueError)
 
 ADMIN = "Administrator"
 NORMAL = "Normal"
@@ -59,8 +60,11 @@ class UserManager:
                     self.db.commit()
                     return user
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            return "Error inserting new user", error
+        except psycopg2.IntegrityError:
+            raise EmailNotUniqueError
+
+        except psycopg2.Error:
+            raise ApplicationError
 
     def fetch_by_id(self, user_id):
         """Fetch one user by their id."""
@@ -76,6 +80,9 @@ class UserManager:
                         return user
                     else:
                         raise UserNotFoundError
+
+        except IntegrityError:
+            raise EmailNotUniqueError
 
         except psycopg2.Error:
             raise ApplicationError

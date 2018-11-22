@@ -23,3 +23,8 @@ class IncorrectPasswordError(Error):
 class ApplicationError(Error):
     """the app just isn't working as it should."""
     pass
+
+
+class EmailNotUniqueError(Error):
+    """The email address is not unique."""
+    pass
