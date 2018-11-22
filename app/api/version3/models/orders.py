@@ -13,7 +13,7 @@ class ParcelOrderModel:
     """Object to store parcel data for easy retrival.
     """
     def __init__(self, user_id, sender, recipient, pickup, destination, weight,
-                 parcel_id=None, status=None):
+                 parcel_id=None, status=None, present_location=None):
         self.id = parcel_id
         self.user_id = user_id
         self.sender = sender
@@ -21,6 +21,10 @@ class ParcelOrderModel:
         self.pickup = pickup
         self.destination = destination
         self.weight = weight
+        if not present_location:
+            self.present_location = pickup
+        else:
+            self.present_location = present_location
         if not status:
             self.status = NOT_DELIVERED
         else:
@@ -43,6 +47,7 @@ class ParcelOrderModel:
             "destination": self.destination,
             "weight": float(self.weight),
             "status": self.status,
+            "present_location": self.present_location
         }
         if self.id:
             parcel_dict["id"] = self.id
@@ -63,9 +68,10 @@ class ParcelOrderManager:
     def save(self, parcel):
         """Insert parcel order data to the database."""
         query = """ INSERT INTO parcels (user_id, sender, recipient, pickup, destination,
-                weight) VALUES (%s, %s, %s, %s, %s, %s)"""
+                weight, status, present_location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
         new_record = (parcel.user_id, parcel.sender, parcel.recipient,
-                      parcel.pickup, parcel.destination, parcel.weight)
+                      parcel.pickup, parcel.destination, parcel.weight,
+                      parcel.status, parcel.present_location)
         try:
             cursor = self.db.cursor()
             cursor.execute(query, new_record)
@@ -87,10 +93,11 @@ class ParcelOrderManager:
             all_parcels = cursor.fetchall()
             data = []
             for row in all_parcels:
-                parcel_id, *other_fields, status = row
+                parcel_id, *other_fields, status, p_location = row
                 data.append(ParcelOrderModel(*other_fields,
                                              parcel_id=parcel_id,
-                                             status=status))
+                                             status=status,
+                                             present_location=p_location))
             return data
 
         except (Exception, psycopg2.DatabaseError) as error:
@@ -105,8 +112,8 @@ class ParcelOrderManager:
         try:
             cursor = self.db.cursor()
             cursor.execute(query, (parcel_id,))
-            parcel_id, *fields, status = cursor.fetchone()
-            parcel = ParcelOrderModel(*fields, parcel_id, status)
+            parcel_id, *fields, status, p_location = cursor.fetchone()
+            parcel = ParcelOrderModel(*fields, parcel_id, status, p_location)
             return parcel
 
         except (Exception, psycopg2.DatabaseError) as error:
@@ -125,10 +132,11 @@ class ParcelOrderManager:
                     cursor.execute(update_parcel_query, (CANCELLED, parcel_id))
                     self.db.commit()
                     cursor.execute(select_parcel_query, (parcel_id,))
-                    parcel_id, *fields, status = cursor.fetchone()
+                    parcel_id, *fields, status, p_location = cursor.fetchone()
                     parcel = ParcelOrderModel(*fields,
                                               parcel_id=parcel_id,
-                                              status=status)
+                                              status=status,
+                                              present_location=p_location)
                     return parcel
 
         except (Exception, psycopg2.DatabaseError) as error:
@@ -144,10 +152,11 @@ class ParcelOrderManager:
                     cursor.execute(update_parcel_query, (destination, parcel_id))
                     self.db.commit()
                     cursor.execute(select_parcel_query, (parcel_id,))
-                    parcel_id, *fields, status = cursor.fetchone()
+                    parcel_id, *fields, status, p_location = cursor.fetchone()
                     parcel = ParcelOrderModel(*fields,
                                               parcel_id=parcel_id,
-                                              status=status)
+                                              status=status,
+                                              present_location=p_location)
                     return parcel
 
         except (Exception, psycopg2.DatabaseError) as error:
@@ -163,10 +172,31 @@ class ParcelOrderManager:
                     cursor.execute(update_parcel_query, (status, parcel_id))
                     self.db.commit()
                     cursor.execute(select_parcel_query, (parcel_id,))
-                    parcel_id, *fields, status = cursor.fetchone()
+                    parcel_id, *fields, status, present_location = cursor.fetchone()
                     parcel = ParcelOrderModel(*fields,
                                               parcel_id=parcel_id,
-                                              status=status)
+                                              status=status,
+                                              present_location=present_location)
+                    return parcel
+        except (Exception, psycopg2.DatabaseError) as error:
+            return "Error changing parcel status", error
+
+    def update_present_location(self, parcel_id, new_location):
+        """Change the parcel's present location."""
+        select_parcel_query = """ SELECT * FROM parcels WHERE parcel_id = %s;"""
+        update_parcel_query = """ UPDATE parcels SET present_location = %s WHERE
+        parcel_id = %s;"""
+        try:
+            with self.db:
+                with self.db.cursor() as cursor:
+                    cursor.execute(update_parcel_query, (new_location, parcel_id))
+                    self.db.commit()
+                    cursor.execute(select_parcel_query, (parcel_id,))
+                    parcel_id, *fields, status, p_location = cursor.fetchone()
+                    parcel = ParcelOrderModel(*fields,
+                                              parcel_id=parcel_id,
+                                              status=status,
+                                              present_location=p_location)
                     return parcel
         except (Exception, psycopg2.DatabaseError) as error:
             return "Error changing parcel status", error

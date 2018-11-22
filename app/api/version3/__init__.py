@@ -21,6 +21,9 @@ api.add_resource(orders.ParcelUpdateDestination,
 api.add_resource(orders.ParcelUpdateStatus,
                  '/parcels/<int:parcel_id>/status',
                  strict_slashes=False)
+api.add_resource(orders.ParcelUpdatePresentLocation,
+                 '/parcels/<int:parcel_id>/presentLocation',
+                 strict_slashes=False)
 
 api.add_resource(users.UserSignup, '/auth/signup', strict_slashes=False)
 api.add_resource(users.UserLogin, '/auth/login', strict_slashes=False)

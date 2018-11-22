@@ -60,7 +60,8 @@ def create_table_queries():
         pickup character varying(50) NOT NULL,
         destination character varying(50) NOT NULL,
         weight numeric NOT NULL,
-        status character varying(50))"""
+        status character varying(50),
+        present_location character varying(50))"""
 
     users = """CREATE TABLE IF NOT EXISTS users (
         user_id serial PRIMARY KEY NOT NULL,
