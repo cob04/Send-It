@@ -120,12 +120,20 @@ class ParcelUpdateDestination(Resource):
         args = parser.parse_args()
         destination = args["destination"]
         try:
+            user_id = get_jwt_identity()
             parcel = self.order_manager.update_destination(parcel_id, destination)
-            payload = {
-                "message": "Success",
-                "parcel_order": parcel.to_dict()
-            }
-            return payload, 201
+            # check if the user owns the parcel.
+            if user_id != parcel.user_id:
+                payload = {
+                    "message": "Sorry, Unauthorized",
+                }
+                return payload, 403
+            else:
+                payload = {
+                    "message": "Success",
+                    "parcel_order": parcel.to_dict()
+                }
+                return payload, 201
 
         except ParcelNotFoundError:
             payload = {
@@ -152,7 +160,6 @@ class ParcelUpdateStatus(Resource):
         user_id = get_jwt_identity()
         manager = UserManager()
         user = manager.fetch_by_id(user_id)
-        print(">>>>>>   ", user.to_dict())
         if user.role != ADMIN:
             payload = {
                 "message": "Unauthorized",
