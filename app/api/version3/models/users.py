@@ -96,8 +96,8 @@ class UserManager:
                     cursor.execute(query)
                     result = cursor.fetchone()
                     if result:
-                        user_id, *fields = result
-                        user = UserModel(*fields, user_id)
+                        user_id, *fields, role = result
+                        user = UserModel(*fields, user_id=user_id, role=role)
                         if check_password_hash(user._password, password):
                             return user
                         else:

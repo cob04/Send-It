@@ -16,8 +16,6 @@ class ParcelOrderList(Resource):
     @jwt_required
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=str, required=True,
-                            help="Order must have a user_id field")
         parser.add_argument('sender', type=str, required=True,
                             help="Order must have a sender")
         parser.add_argument('recipient', type=str, required=True,
@@ -30,8 +28,8 @@ class ParcelOrderList(Resource):
                             help="Order must have a weight")
 
         args = parser.parse_args()
-
-        parcel = ParcelOrderModel(**args)
+        user_id = get_jwt_identity()
+        parcel = ParcelOrderModel(user_id, **args)
         self.order_manager.save(parcel)
         payload = {
             "message": "Success",
@@ -41,13 +39,13 @@ class ParcelOrderList(Resource):
 
     @jwt_required
     def get(self):
-        #user_id = get_jwt_identity()
-        #manager = UserManager()
-        #user = manager.fetch_by_id(user_id)
-        #if user.role == ADMIN:
-        parcel_objects = self.order_manager.fetch_all()
-        #else:
-        #    parcel_objects = self.order_manager.fetch_all_user_parcels(user_id) 
+        user_id = get_jwt_identity()
+        manager = UserManager()
+        user = manager.fetch_by_id(user_id)
+        if user.role == ADMIN:
+            parcel_objects = self.order_manager.fetch_all()
+        else:
+            parcel_objects = self.order_manager.fetch_all_user_parcels(user_id)
         orders = [parcel.to_dict() for parcel in parcel_objects]
         payload = {
             "message": "Success",
