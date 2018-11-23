@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..exceptions import ParcelNotFoundError, ApplicationError
 from ..models.orders import ParcelOrderModel, ParcelOrderManager
 from ..models.users import ADMIN, NORMAL, UserManager
+from ..permissions import admin_required
 
 
 class ParcelOrderList(Resource):
@@ -156,15 +157,8 @@ class ParcelUpdateStatus(Resource):
         self.manager = ParcelOrderManager()
 
     @jwt_required
+    @admin_required
     def put(self, parcel_id):
-        user_id = get_jwt_identity()
-        manager = UserManager()
-        user = manager.fetch_by_id(user_id)
-        if user.role != ADMIN:
-            payload = {
-                "message": "Sorry, you are unauthorized",
-            }
-            return payload, 401
         parser = reqparse.RequestParser()
         parser.add_argument('status', type=str, required=True,
                             help="A status is required")
@@ -199,16 +193,8 @@ class ParcelUpdatePresentLocation(Resource):
         self.manager = ParcelOrderManager()
 
     @jwt_required
+    @admin_required
     def put(self, parcel_id):
-        user_id = get_jwt_identity()
-        manager = UserManager()
-        user = manager.fetch_by_id(user_id)
-        if user.role != ADMIN:
-            payload = {
-                "message": "Sorry, you are unauthorized",
-            }
-            return payload, 401
-
         parser = reqparse.RequestParser()
         parser.add_argument('present_location', type=str, required=True,
                             help="A location is required")
