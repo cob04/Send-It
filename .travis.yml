@@ -15,7 +15,7 @@ install:
 
 # run the tests using pytest with a coverage report
 script:
-  - pytest --cov-report term-missing --cov=app
+  - pytest --cov-report term-missing --cov=app/api
 
 
 # Let coveralls know the test coverage after the tests are done.
