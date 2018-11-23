@@ -19,11 +19,12 @@ def app():
 
 @pytest.fixture(scope="module")
 def init_db(app):
-    create_tables()
-    print("created tables")
-    yield
-    destroy_tables('parcels')
-    print("dropped tables")
+    with app.app_context():
+        create_tables()
+        print("created tables")
+        yield
+        destroy_tables('parcels')
+        print("dropped tables")
 
 
 @pytest.fixture(scope="function")
