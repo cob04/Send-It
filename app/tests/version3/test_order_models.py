@@ -2,9 +2,7 @@ from unittest import TestCase
 import psycopg2
 import pytest
 
-from app import create_app
 from app.api.version3.models.orders import ParcelOrderModel, ParcelOrderManager
-from app.db_config import create_tables, destroy_tables
 
 
 url = "dbname='sendit' host='localhost' port='5432' user='eric' 'password='hardpassword'"
@@ -41,22 +39,17 @@ class ParcelOrderModelTests(TestCase):
 
 
 class TestParcelOrderManager:
-    
+ 
     def test_inserting_parcels_into_database(self, init_db):
         manager = ParcelOrderManager()
         parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
         info = manager.save(parcel)
         assert info == parcel
-        destroy_tables('parcels')
 
-"""    
     def test_fetching_all_parcesls_from_the_db(self, init_db):
         parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
         parcel2 = ParcelOrderModel(1, "gin", "louiz", "home", "restaurant", 2)
         manager = ParcelOrderManager()
         manager.save(parcel1)
         manager.save(parcel2)
-        print(manager.fetch_all())
         assert manager.fetch_all() == [parcel1, parcel2]
-        destroy_tables('parcels')
-"""
