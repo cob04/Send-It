@@ -16,7 +16,7 @@ install:
 # some setup
   - export FLASK_APP='run.py'
   - psql -c 'create database sendit;' -U postgres
-  - export DB_URL='postgresql://postgres@localhost:5432/sendit'
+  - export DATABASE_URL='postgresql://postgres@localhost:5432/sendit'
   - python run.py
 
 
