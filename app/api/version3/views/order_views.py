@@ -63,12 +63,20 @@ class ParcelOrder(Resource):
     @jwt_required
     def get(self, parcel_id):
         try:
+            user_id = get_jwt_identity()
             parcel = self.order_manager.fetch_by_id(parcel_id)
-            payload = {
-                "message": "Success",
-                "parcel_order": parcel.to_dict()
-            }
-            return payload, 200
+            # check if the user owns the parcel.
+            if user_id != parcel.user_id:
+                payload = {
+                    "message": "Sorry, parcel not found",
+                }
+                return payload, 404
+            else:
+                payload = {
+                    "message": "Success",
+                    "parcel_order": parcel.to_dict()
+                }
+                return payload, 200
         except ParcelNotFoundError:
             payload = {
                 "message": "Sorry, we cannot find such a parcel",
