@@ -125,9 +125,9 @@ class ParcelUpdateDestination(Resource):
             # check if the user owns the parcel.
             if user_id != parcel.user_id:
                 payload = {
-                    "message": "Sorry, Unauthorized",
+                    "message": "Sorry, you are unauthorized",
                 }
-                return payload, 403
+                return payload, 401
             else:
                 payload = {
                     "message": "Success",
@@ -162,9 +162,9 @@ class ParcelUpdateStatus(Resource):
         user = manager.fetch_by_id(user_id)
         if user.role != ADMIN:
             payload = {
-                "message": "Unauthorized",
+                "message": "Sorry, you are unauthorized",
             }
-            return payload, 403
+            return payload, 401
         parser = reqparse.RequestParser()
         parser.add_argument('status', type=str, required=True,
                             help="A status is required")
@@ -205,9 +205,9 @@ class ParcelUpdatePresentLocation(Resource):
         user = manager.fetch_by_id(user_id)
         if user.role != ADMIN:
             payload = {
-                "message": "Unauthorized",
+                "message": "Sorry, you are unauthorized",
             }
-            return payload, 403
+            return payload, 401
 
         parser = reqparse.RequestParser()
         parser.add_argument('present_location', type=str, required=True,
