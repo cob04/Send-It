@@ -88,10 +88,19 @@ class UserParcelOrderCancel(Resource):
     @jwt_required
     def put(self, parcel_id):
         try:
-            parcel = self.order_manager.cancel_by_id(parcel_id)
+            user_id = get_jwt_identity()
+            parcel = self.order_manager.fetch_by_id(parcel_id)
+            # check if the user owns the parcel.
+            if user_id != parcel.user_id:
+                payload = {
+                    "message": "Sorry, you are unauthorized",
+                }
+                return payload, 401
+
+            parcel_order = self.order_manager.cancel_by_id(parcel_id)
             payload = {
                 "message": "Success",
-                "parcel_order": parcel.to_dict()
+                "parcel_order": parcel_order.to_dict()
             }
             return payload, 201
         except ParcelNotFoundError:
@@ -122,7 +131,7 @@ class ParcelUpdateDestination(Resource):
         destination = args["destination"]
         try:
             user_id = get_jwt_identity()
-            parcel = self.order_manager.update_destination(parcel_id, destination)
+            parcel = self.order_manager.fetch_by_id(parcel_id)
             # check if the user owns the parcel.
             if user_id != parcel.user_id:
                 payload = {
@@ -130,9 +139,11 @@ class ParcelUpdateDestination(Resource):
                 }
                 return payload, 401
             else:
+                parcel_order = self.order_manager.update_destination(parcel_id,
+                                                               destination)
                 payload = {
                     "message": "Success",
-                    "parcel_order": parcel.to_dict()
+                    "parcel_order": parcel_order.to_dict()
                 }
                 return payload, 201
 
