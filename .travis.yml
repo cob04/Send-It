@@ -13,6 +13,13 @@ install:
   - pip install coveralls
 
 
+# some setup
+  - export FLASK_APP='run.py'
+  - psql -c 'create database sendit;' -U postgres
+  - export DB_URL='postgresql://postgres@localhost:5432/sendit'
+  - python run.py
+
+
 # run the tests using pytest with a coverage report
 script:
   - pytest --cov-report term-missing --cov=app/api

@@ -42,6 +42,13 @@ class UserSignup(Resource):
             }
             return payload, 400
 
+        except ApplicationError:
+            payload = {
+                "messsage": "Sorry, something has gone terribly wrong",
+                "eror": "Application error"
+            }
+            return payload, 500
+
 
 class UserLogin(Resource):
     """Resource that provides endpoint to login users."""
