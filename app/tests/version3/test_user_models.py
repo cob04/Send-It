@@ -7,7 +7,7 @@ import pytest
 
 
 from app import create_app
-from app.api.version3.exceptions import UserNotFoundError
+from app.api.version3.exceptions import UserNotFoundError, EmailNotUniqueError
 from app.api.version3.models.users import UserModel, UserManager
 from app.api.version3.models.users import NORMAL
 from app.db_config import create_tables, destroy_tables
@@ -44,8 +44,30 @@ class TestUserManager(TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         create_tables()
-        self.manager = ParcelOrderManager()
+        self.manager = UserManager()
 
     def tearDown(self):
         destroy_tables('users')
         self.app_context.pop()
+
+    def test_saving_a_new_user(self):
+        user = UserModel("bob", "bob@email.com", "burgers")
+        result = self.manager.save(user)
+        user.id = 1
+        self.assertEqual(result, user)
+        
+        # test saving a user with a similar email
+        user2 = UserModel("bobby", "bob@email.com", "burgers")
+        with self.assertRaises(EmailNotUniqueError):
+            self.manager.save(user2)
+
+    def test_fetching_user_by_id(self):
+        user = UserModel("bob", "bob@email.com", "burgers")
+        self.manager.save(user)
+        result = self.manager.fetch_by_id(1)
+        user.id = 1
+        self.assertEqual(result, user)
+
+        # test fetching a user who does not exist
+        with self.assertRaises(UserNotFoundError):
+            self.manager.fetch_by_id(2)
