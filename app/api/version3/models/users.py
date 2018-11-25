@@ -27,7 +27,7 @@ class UserModel:
             self.role = NORMAL
 
     def __repr__(self):
-        return "User(%s, %s, %s,)" % (self.name, self.email, self.role)
+        return "User(%s, %s, %s)" % (self.name, self.email, self.role)
 
     def to_dict(self):
         """Return a parce in a dictionary format."""
