@@ -1,5 +1,7 @@
 # config.py
 
+import os
+
 
 class Config:
 
@@ -9,15 +11,18 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    DATABASE_URL = "dbname='sendit' host='localhost' port='5432'\
-                    user='eric' password='hardpassword'"
+    DATABASE_URL = os.getenv('DATABASE_URL',
+                             """dbname='sendit' host='localhost'
+                             port='5432' user='eric'
+                             password='hardpassword'""")
 
 
 class TestingConfig(Config):
     TESTING = True
-    DATABASE_URL = "dbname='sendit-tests' host='localhost' port='5432'\
-                    user='eric' password='hardpassword'"
-
+    DATABASE_URL = os.getenv('DATABASE_URL',
+                             """dbname='sendit-tests' host='localhost'
+                             port='5432' user='eric'
+                             password='hardpassword'""")
 
 config = {
     'development': DevelopmentConfig,
