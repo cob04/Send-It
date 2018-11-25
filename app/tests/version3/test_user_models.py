@@ -64,9 +64,10 @@ class TestUserManager(TestCase):
     def test_fetching_user_by_id(self):
         user = UserModel("bob", "bob@email.com", "burgers")
         self.manager.save(user)
-        result = self.manager.fetch_by_id(1)
         user.id = 1
-        self.assertEqual(result, user)
+        # compare dict representation because of expected hashed password mismatch.
+        self.assertEqual(self.manager.fetch_by_id(1).to_dict(),
+                         user.to_dict())
 
         # test fetching a user who does not exist
         with self.assertRaises(UserNotFoundError):

@@ -29,6 +29,10 @@ class UserModel:
     def __repr__(self):
         return "User(%s, %s, %s)" % (self.name, self.email, self.role)
 
+    def __eq__(self, other):
+        """Compare users by their attributes."""
+        return self.__dict__ == other.__dict__
+
     def to_dict(self):
         """Return a parce in a dictionary format."""
         user_dict = {
