@@ -14,10 +14,10 @@ install:
 
 
 # some setup
+env:
   - export FLASK_APP='run.py'
   - psql -c 'create database sendit;' -U postgres
   - export DATABASE_URL='postgresql://postgres@localhost:5432/sendit'
-  - python run.py
 
 
 # run the tests using pytest with a coverage report
