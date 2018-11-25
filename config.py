@@ -11,8 +11,10 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    DATABASE_URL = "dbname='sendit' host='localhost' port='5432'\
-                    user='eric' password='hardpassword'"
+    DATABASE_URL = os.getenv('DATABASE_URL',
+                             """dbname='sendit' host='localhost'
+                             port='5432' user='eric'
+                             password='hardpassword'""")
 
 
 class TestingConfig(Config):

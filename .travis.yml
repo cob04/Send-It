@@ -13,11 +13,13 @@ install:
   - pip install coveralls
 
 
-# some setup
-env:
-  - export FLASK_APP='run.py'
+# create the database to be used
+before_script:
   - psql -c 'create database sendit;' -U postgres
-  - export DATABASE_URL='postgresql://postgres@localhost:5432/sendit'
+
+# export environment variables
+env:
+  - DATABASE_URL='postgresql://postgres@localhost:5432/sendit'
 
 
 # run the tests using pytest with a coverage report
