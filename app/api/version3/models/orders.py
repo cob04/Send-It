@@ -86,7 +86,7 @@ class ParcelOrderManager:
                     return parcel
 
         except psycopg2.Error as e:
-            return e
+            raise ApplicationError
     
 
     def fetch_all(self):
@@ -107,7 +107,7 @@ class ParcelOrderManager:
                     return data
 
         except psycopg2.Error as e:
-            return e
+            raise ApplicationError
     
     def fetch_all_user_parcels(self, user_id):
         """Fetch all parcels."""

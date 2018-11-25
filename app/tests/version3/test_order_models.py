@@ -7,7 +7,9 @@ import pytest
 
 
 from app import create_app
+from app.api.version3.exceptions import ParcelNotFoundError
 from app.api.version3.models.orders import ParcelOrderModel, ParcelOrderManager
+from app.api.version3.models.orders import CANCELLED, DELIVERED
 from app.db_config import create_tables, destroy_tables
 
 
@@ -48,6 +50,7 @@ class TestParcelOrderManager(TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         create_tables()
+        self.manager = ParcelOrderManager()
 
     def tearDown(self):
         destroy_tables('parcels')
@@ -74,3 +77,65 @@ class TestParcelOrderManager(TestCase):
         parcel1.id = 1
         parcel2.id = 2
         self.assertEqual(manager.fetch_all(), [parcel1, parcel2])
+
+    def test_fetching_one_parcel(self):
+        parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
+        self.manager.save(parcel)
+        parcel.id = 1
+        self.assertEqual(self.manager.fetch_by_id(1), parcel)
+        # test fetching a parcel that does not exist
+        with self.assertRaises(ParcelNotFoundError):
+            self.manager.fetch_by_id(2)
+
+    def test_parcels_owned_by_one_user(self):
+        parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 4)
+        parcel2 = ParcelOrderModel(2, "bob", "linda", "home", "restaurant", 2)
+        parcel3 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 6)
+        parcel1.id = 1
+        parcel2.id = 2
+        parcel3.id = 3
+        self.manager.save(parcel1)
+        self.manager.save(parcel2)
+        self.manager.save(parcel3)
+        self.assertEqual(self.manager.fetch_all_user_parcels(1), [parcel1, parcel3])
+
+    def test_cancelling_a_parcel(self):
+        parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 4)
+        self.manager.save(parcel1)
+        parcel1.id = 1
+        parcel1.status = CANCELLED
+        self.assertEqual(self.manager.cancel_by_id(1), parcel1)
+        # test cancelling a parcel that doesn't exist
+        with self.assertRaises(ParcelNotFoundError):
+            self.manager.cancel_by_id(3)
+
+    def test_updating_parcel_destination(self):
+        parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 4)
+        self.manager.save(parcel1)
+        parcel1.id = 1
+        self.assertEqual(self.manager.update_destination(1, "Nairobi").destination,
+                         "Nairobi")
+        # test changing destination for a parcel that does'nt exist
+        with self.assertRaises(ParcelNotFoundError):
+            self.manager.update_destination(4, "Nairobi")
+
+    def test_updating_parcel_status(self):
+        parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 4)
+        self.manager.save(parcel1)
+        parcel1.id = 1
+        self.assertEqual(self.manager.update_status(1, DELIVERED).status,
+                         DELIVERED)
+        # test changing the status for a parcel that does'nt exist
+        with self.assertRaises(ParcelNotFoundError):
+            self.manager.update_status(6, DELIVERED)
+    
+    def test_updating_parcel_present_location(self):
+        parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 4)
+        self.manager.save(parcel1)
+        parcel1.id = 1
+        self.assertEqual(self.manager.update_present_location(1, "Kisumu").present_location,
+                         "Kisumu")
+        # test changing present location for a parcel that does'nt exist
+        with self.assertRaises(ParcelNotFoundError):
+            self.manager.update_present_location(2, "Kisumu")
+
