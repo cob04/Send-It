@@ -7,7 +7,8 @@ import pytest
 
 
 from app import create_app
-from app.api.version3.exceptions import UserNotFoundError, EmailNotUniqueError
+from app.api.version3.exceptions import (UserNotFoundError, EmailNotUniqueError,
+                                         IncorrectPasswordError)
 from app.api.version3.models.users import UserModel, UserManager
 from app.api.version3.models.users import NORMAL
 from app.db_config import create_tables, destroy_tables
@@ -72,3 +73,20 @@ class TestUserManager(TestCase):
         # test fetching a user who does not exist
         with self.assertRaises(UserNotFoundError):
             self.manager.fetch_by_id(2)
+
+
+    def test_authenticating_a_user(self):
+        user = UserModel("bob", "bob@email.com", "burgers")
+        self.manager.save(user)
+        user.id = 1
+        self.assertEqual(
+            self.manager.authenticate("bob@email.com", "burgers").to_dict(),
+            user.to_dict())
+
+        # test authenticating with a wrong password
+        with self.assertRaises(IncorrectPasswordError):
+            self.manager.authenticate("bob@email.com", "burger")
+
+        # test authenticating a user who doesn't exist
+        with self.assertRaises(UserNotFoundError):
+            self.manager.authenticate("robert@email.com", "burgers")
