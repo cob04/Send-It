@@ -1,12 +1,14 @@
+from flask import current_app
+
 from unittest import TestCase
+
 import psycopg2
+import pytest
+
 
 from app import create_app
 from app.api.version3.models.orders import ParcelOrderModel, ParcelOrderManager
 from app.db_config import create_tables, destroy_tables
-
-
-url = "dbname='sendit' host='localhost' port='5432' user='eric' 'password='hardpassword'"
 
 
 class ParcelOrderModelTests(TestCase):
@@ -39,24 +41,36 @@ class ParcelOrderModelTests(TestCase):
         self.assertEqual(parcel.to_dict(), parcel_dict)
 
 
-class ParcelOrderManagerTests(TestCase):
+class TestParcelOrderManager(TestCase):
 
     def setUp(self):
-        self.app = create_app()
+        self.app = create_app('testing')
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        create_tables()
 
     def tearDown(self):
-        destroy_tables("parcels")
-    
+        destroy_tables('parcels')
+        self.app_context.pop()
+
+    def test_app_exists(self):
+        self.assertFalse(current_app is None)
+
+    def test_app_is_testing(self):
+        self.assertTrue(current_app.config['TESTING'])
+
     def test_inserting_parcels_into_database(self):
         manager = ParcelOrderManager()
-        parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
-        info = manager.save(parcel)
-        self.assertEqual(info, parcel)
+        parcel = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 4)
+        result = manager.save(parcel)
+        self.assertEqual(result, parcel)
 
     def test_fetching_all_parcesls_from_the_db(self):
         parcel1 = ParcelOrderModel(1, "bob", "linda", "home", "restaurant", 2)
-        parcel2 = ParcelOrderModel(1, "gin", "louiz", "home", "restaurant", 2)
+        parcel2 = ParcelOrderModel(1, "gin", "louiz", "home", "restaurant", 3)
         manager = ParcelOrderManager()
         manager.save(parcel1)
         manager.save(parcel2)
+        parcel1.id = 1
+        parcel2.id = 2
         self.assertEqual(manager.fetch_all(), [parcel1, parcel2])

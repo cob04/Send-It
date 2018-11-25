@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..exceptions import ParcelNotFoundError, ApplicationError
 from ..models.orders import ParcelOrderModel, ParcelOrderManager
 from ..models.users import ADMIN, NORMAL, UserManager
+from ..permissions import admin_required
 
 
 class ParcelOrderList(Resource):
@@ -62,12 +63,20 @@ class ParcelOrder(Resource):
     @jwt_required
     def get(self, parcel_id):
         try:
+            user_id = get_jwt_identity()
             parcel = self.order_manager.fetch_by_id(parcel_id)
-            payload = {
-                "message": "Success",
-                "parcel_order": parcel.to_dict()
-            }
-            return payload, 200
+            # check if the user owns the parcel.
+            if user_id != parcel.user_id:
+                payload = {
+                    "message": "Sorry, parcel not found",
+                }
+                return payload, 404
+            else:
+                payload = {
+                    "message": "Success",
+                    "parcel_order": parcel.to_dict()
+                }
+                return payload, 200
         except ParcelNotFoundError:
             payload = {
                 "message": "Sorry, we cannot find such a parcel",
@@ -87,10 +96,19 @@ class UserParcelOrderCancel(Resource):
     @jwt_required
     def put(self, parcel_id):
         try:
-            parcel = self.order_manager.cancel_by_id(parcel_id)
+            user_id = get_jwt_identity()
+            parcel = self.order_manager.fetch_by_id(parcel_id)
+            # check if the user owns the parcel.
+            if user_id != parcel.user_id:
+                payload = {
+                    "message": "Sorry, you are unauthorized",
+                }
+                return payload, 401
+
+            parcel_order = self.order_manager.cancel_by_id(parcel_id)
             payload = {
                 "message": "Success",
-                "parcel_order": parcel.to_dict()
+                "parcel_order": parcel_order.to_dict()
             }
             return payload, 201
         except ParcelNotFoundError:
@@ -98,6 +116,7 @@ class UserParcelOrderCancel(Resource):
                 "message": "Sorry,  we cannnot find such a parcel",
                 "error": "Parcel not found"
             }
+            #TODO: add return function.
 
         except ApplicationError:
             payload = {
@@ -120,12 +139,22 @@ class ParcelUpdateDestination(Resource):
         args = parser.parse_args()
         destination = args["destination"]
         try:
-            parcel = self.order_manager.update_destination(parcel_id, destination)
-            payload = {
-                "message": "Success",
-                "parcel_order": parcel.to_dict()
-            }
-            return payload, 201
+            user_id = get_jwt_identity()
+            parcel = self.order_manager.fetch_by_id(parcel_id)
+            # check if the user owns the parcel.
+            if user_id != parcel.user_id:
+                payload = {
+                    "message": "Sorry, you are unauthorized",
+                }
+                return payload, 401
+            else:
+                parcel_order = self.order_manager.update_destination(parcel_id,
+                                                               destination)
+                payload = {
+                    "message": "Success",
+                    "parcel_order": parcel_order.to_dict()
+                }
+                return payload, 201
 
         except ParcelNotFoundError:
             payload = {
@@ -148,6 +177,7 @@ class ParcelUpdateStatus(Resource):
         self.manager = ParcelOrderManager()
 
     @jwt_required
+    @admin_required
     def put(self, parcel_id):
         parser = reqparse.RequestParser()
         parser.add_argument('status', type=str, required=True,
@@ -183,14 +213,15 @@ class ParcelUpdatePresentLocation(Resource):
         self.manager = ParcelOrderManager()
 
     @jwt_required
+    @admin_required
     def put(self, parcel_id):
         parser = reqparse.RequestParser()
-        parser.add_argument('new_location', type=str, required=True,
+        parser.add_argument('present_location', type=str, required=True,
                             help="A location is required")
         args = parser.parse_args()
-        new_location = args["new_location"]
+        present_location = args["present_location"]
         try:
-            parcel = self.manager.update_present_location(parcel_id, new_location)
+            parcel = self.manager.update_present_location(parcel_id, present_location)
             payload = {
                 "message": "Success",
                 "parcel_order": parcel.to_dict()
