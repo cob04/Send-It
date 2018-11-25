@@ -1,7 +1,7 @@
 from flask import current_app
 from unittest import TestCase
 
-from app import create_app()
+from app import create_app
 from app.db_config import destroy_tables
 
 
