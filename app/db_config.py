@@ -28,15 +28,18 @@ def create_tables():
         print("Error while creating PostgreSQL tables", error)
 
 
-def destroy_tables(table):
+def destroy_tables(*tables):
     try:
         with connection() as conn:
             with conn.cursor() as cursor:
-                drop_query = """DROP TABLE IF EXISTS %s CASCADE"""
-                cursor.execute(query, (table,))
+                for table in tables:
+                    drop_query = """DROP TABLE IF EXISTS %s CASCADE;""" % table
+                    cursor.execute(drop_query)
+                conn.commit()
+                print("Tables destroyed successfully in PostgreSQL")
 
     except (Exception, psycopg2.DatabaseError) as error:
-        return "Error while destroying PostgresSQL tables", error
+        print("Error while destroying PostgresSQL tables>> ::", error)
 
 
 def create_table_queries():

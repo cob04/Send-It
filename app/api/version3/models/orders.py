@@ -39,6 +39,10 @@ class ParcelOrderModel:
                                                  self.destination,
                                                  self.weight)
 
+    def __eq__(self, other):
+        """Compare two parcels by their attributes."""
+        return self.__dict__ == other.__dict__
+
     def to_dict(self):
         """Return a parce in a dictionary format."""
         parcel_dict = {

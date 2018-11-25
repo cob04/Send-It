@@ -15,7 +15,8 @@ def create_app(config_name='testing'):
     app.config.from_object(config[config_name])
     app.config["JWT_SECRET_KEY"] = "thisisabigsecret"
     jwt = JWTManager(app)
-    create_tables()
+    with app.app_context():
+        create_tables()
     app.register_blueprint(v1)
     app.register_blueprint(v2)
     app.register_blueprint(v3)
