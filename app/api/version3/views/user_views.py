@@ -37,15 +37,15 @@ class UserSignup(Resource):
 
         except EmailNotUniqueError:
             payload = {
-                "messsage": "Sorry, your email is already taken",
-                "eror": "Email not unique"
+                "message": "Sorry, your email is already taken",
+                "error": "Email not unique"
             }
             return payload, 400
 
         except ApplicationError:
             payload = {
                 "messsage": "Sorry, something has gone terribly wrong",
-                "eror": "Application error"
+                "error": "Application error"
             }
             return payload, 500
 
