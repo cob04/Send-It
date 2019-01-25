@@ -10,3 +10,4 @@ psycopg2==2.7.6.1
 psycopg2-binary==2.7.6.1
 Flask-JWT-Extended==3.13.1
 python-dotenv==0.9.1
+Flask-Cors==3.0.7

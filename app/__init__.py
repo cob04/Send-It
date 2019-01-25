@@ -2,6 +2,7 @@
 
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from config import config
 from .api.version1 import v1
 from .api.version2 import v2
@@ -12,6 +13,7 @@ from .db_config import create_tables
 
 def create_app(config_name='testing'):
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(config[config_name])
     app.config["JWT_SECRET_KEY"] = "thisisabigsecret"
     jwt = JWTManager(app)
