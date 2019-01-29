@@ -66,7 +66,8 @@ class UserLogin(Resource):
         email, password = args['email'], args["password"]
         try:
             user = self.manager.authenticate(email, password)
-            access_token = create_access_token(identity=user.id)
+            access_token = create_access_token(identity=user.id,
+                                               expires_delta=False)
             payload = {
                 "message": "Success",
                 "user": user.to_dict(),

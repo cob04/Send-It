@@ -38,7 +38,7 @@ class ParcelOrderModelTests(TestCase):
             "destination": "restaurant",
             "present_location": "home",
             "weight": 2.0,
-            "status": "Parcel not delivered"
+            "status": "Not delivered"
         }
         self.assertEqual(parcel.to_dict(), parcel_dict)
 

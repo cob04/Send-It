@@ -5,10 +5,10 @@ from app.db_config import init_db
 from ..exceptions import ParcelNotFoundError, ApplicationError
 
 
-NOT_DELIVERED = "Parcel not delivered"
-DELIVERED = "Parcel delivered"
-IN_TRANSIT = "Parcel in transit"
-CANCELLED = "Parcel cancelled"
+NOT_DELIVERED = "Not delivered"
+DELIVERED = "Delivered"
+IN_TRANSIT = "In transit"
+CANCELLED = "Cancelled"
 
 
 class ParcelOrderModel:
